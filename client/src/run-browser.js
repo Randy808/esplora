@@ -30,7 +30,10 @@ try {
   storageDriver = _ => ({ local: { getItem: key => O.of(null) } })
 }
 
+// This is the entrypoint for cycle.js (takes in main from app.js)
+// The second arg are the drivers
 run(main, {
+  // Marks root dom element
   DOM: makeDOMDriver('#explorer')
 , HTTP: makeHTTPDriver()
 , route: makeRouteDriver(captureClicks(makeHistoryDriver({ basename: webBase })))

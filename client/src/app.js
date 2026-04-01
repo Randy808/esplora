@@ -26,23 +26,40 @@ import {
 import l10n, { defaultLang } from './l10n'
 import * as views from './views'
 
+
+// If the browserify flag 'process.browser' is set
+// ref: https://stackoverflow.com/a/27718218/7407434
 if (process.browser) {
+  // Require bootstrap
   require('bootstrap/js/dist/collapse')
 }
 
+// Declare apiBase to be either the api url or the api path on this domain (and replace last slash with empty space)
 const apiBase = (process.env.API_URL || '/api').replace(/\/+$/, '')
+    // Declare setBase to be a function that takes in a path and other properties, and spits out the other
+    // properties with a url property that includes the api base url
     , setBase = ({ path, ...r }) => ({ ...r, url: path.includes('://') || path.startsWith('./') ? path : apiBase + path })
 
+// Set reservedPaths
 const reservedPaths = [ 'mempool', 'assets', 'search' ]
 
+// SHESEK_START
 // Make driver source observables rxjs5-compatible via rxjs-compat
+// SHESEK_END
+
+// Call setAdapt and pass in a lambda that takes in a stream and makes an 'O' from it?
+// 'O' is observable from rx.js
 setAdapt(stream => O.from(stream))
 
+
+// Export the default main function and have it take in the some properties from the driver object passed into cycle.js's 'run'
 export default function main({ DOM, HTTP, route, storage, scanner: scan$, search: searchResult$, blinding: unblinded$ }) {
   const
-
+  // Declare a reply lambda that takes in 'cat' and 'raw', selects all the 'cat' and maps it to the same thing if raw is true or the body or text if not
     reply = (cat, raw) => dropErrors(HTTP.select(cat)).map(r => raw ? r : (r.body || r.text))
+  // Declare on to be a lambda that takes in 'sel' (selector?), 'ev' (a dom event?), and 'opt', and then...?
   , on    = (sel, ev, opt={}) => DOM.select(sel).events(ev, opt)
+  // Declare a lamda called 'click' on a 'sel' (selector) that maps any click events to the event's ownerTarget's dataset
   , click = sel => on(sel, 'click').map(e => e.ownerTarget.dataset)
 
   /// User actions
@@ -70,7 +87,7 @@ export default function main({ DOM, HTTP, route, storage, scanner: scan$, search
     , last_txids: parseHashes(loc.query.txids)
     , est_chain_seen_count: +loc.query.c || 0
     }))
-  , goAssetList$ = !process.env.IS_ELEMENTS ? O.empty() : route('/assets').map(loc => ({ 
+  , goAssetList$ = !process.env.IS_ELEMENTS ? O.empty() : route('/assets').map(loc => ({
       start_index: +loc.query.start_index || 0
     , sort_field: loc.query.sort_field != null ? loc.query.sort_field : 'name'
     , sort_dir: loc.query.sort_dir != null ? loc.query.sort_dir : 'asc'
@@ -81,13 +98,22 @@ export default function main({ DOM, HTTP, route, storage, scanner: scan$, search
   // End Elements only
 
 
+  // S_START
   // three ways to search: via the form, using the short /<query> search URL and using the QR scanner.
   // this triggers a redirect to /search?q=<query>, which then triggers the search itself.
+  // S_END
+
+  // merges the observables and pumps out all events from any of the args
   , searchQuery$ = O.merge(
+      // on the submit event on '.search' elements, map the event such that we get the value from it
       on('.search', 'submit').map(e => e.target.querySelector('[name=q]').value)
+      // Also make this searchQuery observable return `q` query params (as long as it's not reserved)
     , route('/:q([a-zA-Z0-9]+)').map(loc => loc.params.q).filter(q => !reservedPaths.includes(q))
+    // I think this is also feeding in qr codes (from instascan.js)
     , scan$
     )
+
+  //CHECKPOINT
 
   // auto-expand when opening with "#expand"
   , expandTx$ = route('/tx/:txid').filter(loc => loc.query.expand).map(loc => loc.params.txid)
@@ -150,7 +176,7 @@ export default function main({ DOM, HTTP, route, storage, scanner: scan$, search
 
   , prevBlocks$ = process.browser ? O.empty()
       : goBlocks$.combineLatest(tipHeight$, (d, tipHeight) => d.start_height != null && d.start_height < tipHeight ? Math.min(tipHeight, d.start_height+blocksPerPage) : null)
-  
+
   // Single block and associated txs
   , block$ = reply('block').merge(goBlock$.mapTo(null))
   , blockStatus$ = reply('block-stat').merge(goBlock$.mapTo(null))
@@ -200,7 +226,7 @@ export default function main({ DOM, HTTP, route, storage, scanner: scan$, search
   , mempoolRecent$ = reply('recent')
 
   // dashboard
-  , dashboardState$ = O.combineLatest(blocks$, mempoolRecent$, (blks, txs) => 
+  , dashboardState$ = O.combineLatest(blocks$, mempoolRecent$, (blks, txs) =>
         ({ dashblocks: blks.slice(0, 5), dashTxs: txs.slice(0, 5)}))
 
   // Fee estimates
@@ -291,7 +317,12 @@ export default function main({ DOM, HTTP, route, storage, scanner: scan$, search
     .filter(([ expand, page ]) => page.query.expand != expand)
     .map(([ expand, page ]) => [ page.pathname, page.hash, updateQuery(page.query, { expand }) ])
 
+  // L_START
   /// Sinks
+  // L_END
+
+  // "Sinks are outgoing messages"
+  // ref: https://cycle.js.org/getting-started.html
 
   // HTTP request sink
   , req$ = O.merge(
