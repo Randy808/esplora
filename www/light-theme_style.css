@@ -64,7 +64,6 @@ body.theme-light {
   }
 
 .theme-light .sub-navbar{
-    background-color: whitesmoke;
     box-shadow: 1px 1px 1px lightgray;
 }
 
@@ -189,7 +188,7 @@ body.theme-light {
 }
 
 .theme-light .dash-container .view-more img{
-   filter: brightness(0) saturate(100%) invert(40%) sepia(89%) saturate(604%) hue-rotate(159deg) brightness(91%) contrast(96%); 
+   filter: brightness(0) saturate(100%) invert(40%) sepia(89%) saturate(604%) hue-rotate(159deg) brightness(91%) contrast(96%);
 }
 
 .theme-light .direction-arrow, .theme-light .arrow-prev, .theme-light .arrow-next {
@@ -236,9 +235,9 @@ body.theme-light {
 
 @media only screen and (max-width: 850px) {
     .theme-light .assets-table-link-row:nth-child(odd)  .assets-table-row {
-       color: #fff !important; 
+       color: #fff !important;
     }
-} 
+}
 
 .theme-light .prev-next-blocks-btns > div a > div:hover {
     background-color: #B7BABD;
