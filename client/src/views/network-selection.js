@@ -31,24 +31,24 @@ export default ({ t, theme, page }) => (
             {items &&
               Object.entries(items).map(([name, url]) => {
                 return (
-                  <div
+                  <a
                     id={name.replace(/ /g, "")}
-                    className={`network-hover-menu-option-container ${name == active ? "active" : ""}`}
+                    href={url}
+                    className={`network-hover-menu-option-container ${name.replace(/ /g, "").toLowerCase()} ${name === active ? "active" : ""}`}
                   >
                     <div
                       id={name.replace(/ /g, "")}
-                      className={`network-hover-menu-option ${name == active ? "active" : ""}`}
+                      className={`network-hover-menu-option`}
                     >
                       <span>
                         <img
                           className="menu-logo"
-                          alt=""
                           src={`${staticRoot}img/icons/${name.replace(/ /g, "")}-menu-logo.svg`}
                         />
                       </span>
                       {name}
                     </div>
-                  </div>
+                  </a>
                 );
               })}
           </div>

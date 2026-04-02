@@ -6,6 +6,7 @@ const hasCam = process.browser && navigator.mediaDevices && navigator.mediaDevic
 export default ({ t, klass, autofocus }) =>
   <form className="search" action={process.browser?undefined:"search"}>
     <div className={`search-bar${klass?` ${klass}` : ''}`}>
+      <img src={`${staticRoot}img/icons/magnifying-glass.svg`}/>
       <input
         className="form-control search-bar-input"
         type="search"

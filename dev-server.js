@@ -34,10 +34,11 @@ const custom_assets = (process.env.CUSTOM_ASSETS||'').split(/ +/).filter(Boolean
 const p = fn => (req, res, next) => fn(req, res).catch(next)
 
 app.get('/', (req, res) => res.render(rpath('client/index.pug')))
+app.get(process.env.BASE_HREF + 'app.js', browserify(rpath('client/src/run-browser.js')))
 app.get('/app.js', browserify(rpath('client/src/run-browser.js')))
 
 // Merges the main stylesheet from www/style.css with the custom css files
-app.get('/style.css', p(async (req, res) =>
+app.get(process.env.BASE_HREF + 'style.css', p(async (req, res) =>
   res.type('css').send(await prepCss())))
 
 const prepCss = async _ =>
@@ -58,13 +59,13 @@ custom_assets.forEach(pattern => {
         , stat = fs.statSync(path)
 
     stat.isDirectory()
-      ? app.use('/'+name, express.static(path))
-      : app.get('/'+name, (req, res) => res.sendFile(path))
+      ? app.use(process.env.BASE_HREF + name, express.static(path))
+      : app.get(process.env.BASE_HREF + name, (req, res) => res.sendFile(path))
   })
 })
 
 // And finally the default fallback assets from www/
-app.use('/', express.static(rpath('www')))
+app.use(`${process.env.BASE_HREF}`, express.static(rpath('www')))
 
 app.use((req, res) => res.render(rpath('client/index.pug')))
 
