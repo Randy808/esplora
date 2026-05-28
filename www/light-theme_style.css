@@ -79,10 +79,6 @@ body.theme-light {
     color: rgba(21, 24, 28, 1);
 }
 
-.theme-light .sub-navbar{
-    box-shadow: 1px 1px 1px lightgray;
-}
-
 .theme-light .blocks-table, .theme-light .transactions-table, .theme-light .stats-table, .theme-light .assets-table{
     background: none;
     box-shadow: 1px 0px 5px 1px lightgray;

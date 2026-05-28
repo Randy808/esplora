@@ -421,21 +421,21 @@ a, a:link, a:visited, a:hover, a:focus {
 .container{
   width: 100%;
   max-width: 1200px !important;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
 }
 
 .nav-container{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  margin-top: 30px;
 }
 
 .main-nav-container{
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  width: 200px;
 }
 
 .main-nav{
@@ -460,9 +460,11 @@ a, a:link, a:visited, a:hover, a:focus {
 /* Menu Toggle Icon -- Toggle Style and Animation*/
 
 .toggle-container{
-  position: relative;
+  position: absolute;
   display: flex;
-  padding: 30px 0 30px 30px;
+  /* Padding prevents the menu from closing when moving the mouse toward the popup. */
+  padding: 30px;
+  padding-right: 0px;
 }
 
 .toggle-container .burger-icon {
@@ -555,8 +557,8 @@ a, a:link, a:visited, a:hover, a:focus {
   margin-right: 0;
 }
 .navbar-brand::before {
-  width: 54px;
-  height: 54px;
+  width: 45px;
+  height: 45px;
   background: url(img/icons/menu-logo.svg);
   background-size: 54px 54px;
   display: inline-block;
@@ -2663,14 +2665,15 @@ dl.mempool-histogram .bar:before {
 .sub-navbar{
   width: 100%;
   display: flex;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
+  margin-top: 50px;
 }
 
 .sub-nav-container{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 79px;
+  gap: 15px;
 }
 
 .sub-nav {
@@ -2800,7 +2803,7 @@ dl.mempool-histogram .bar:before {
 }
 
 .search {
-  width: 35%;
+  width: 100%;
 }
 
 .search-bar {
