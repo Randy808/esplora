@@ -3791,3 +3791,322 @@ h3.table-title{
   font-weight: 400;
   line-height: 22px;
 }
+
+
+/* new block table */
+
+.table-heading {
+  display: flex;
+  align-items: center;
+}
+
+.table-heading-title {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: chakra petch;
+  margin-left: 16px;
+  color: #B5BDC2;
+}
+
+.table-heading-tooltip {
+  width: 20px;
+  margin-left: 6px;
+}
+
+.block-header-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #181818;
+  width: 52px;
+  height: 52px;
+  border-radius: 4px;
+}
+
+.block-header-icon-container img {
+  width: 26px;
+}
+
+
+
+.title-row {
+  display: flex;
+  background-color: #181818;
+  width: 100%;
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.block-template {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 2px solid #FA8A0033;
+  background-color: #1C1C1C;
+      width: fit-content;
+      padding: 10px;
+}
+
+.title-block-square-row {
+  display: flex;
+  gap: 2px;
+}
+
+.title-block-square {
+  width: 8px;
+  height: 8px;
+  background-color: #141414;
+}
+
+.title-block-square-used {
+  background-color: #FA8A00;
+}
+
+.pending-block-details {
+  display: flex;
+  flex-direction: column;
+  margin-left: 16px;
+  width: 100%;
+}
+
+.pending-block-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.pending-block-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pending-block-stat-header {
+  font-size: 10px;
+  color: #B5BDC2;
+}
+
+.pending-block-stat-value {
+  font-size: 14px;
+}
+
+.progress-section {
+  margin-top: auto;
+}
+
+.block-filling {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.block-filling-text {
+  font-size: 11px;
+  color: #B5BDC2;
+}
+
+.block-filling-percentage {
+  display: flex;
+}
+
+.pending-usage-bar {
+  position: relative;
+  background-color: #262626;
+  border-radius: 13px;
+  /* width: 162px; */
+  height: 10px;
+}
+
+.pending-usage-bar-fill {
+  background-size: var(--parent-width) 100%;
+  background:  linear-gradient(90deg, #22C55E, #FA3600 75%);
+  height: 100%;
+  border-radius: 13px;
+}
+
+.target-text {
+  font-size: 11px;
+  color: #B5BDC2;
+  text-align: right;
+  margin-top: 4px;
+}
+
+/*****/
+
+
+
+
+
+.dashed-line {
+  width: 100%;
+  height: 4px;
+  display: block;
+  overflow: visible;
+  margin-top: 20px;
+}
+
+.dashed-line line {
+  stroke: #777;
+  stroke-width: 2;
+  stroke-dasharray: 8 8;
+  stroke-linecap: round;
+}
+
+.section-title {
+  font-size: 14px;
+  color: #B5BDC2;
+  font-weight: 600;
+  font-family: chakra petch;
+  margin-top: 20px;
+
+  /* change this if possible, I only want margin tops. which i cant apply atm because table is reused across pages */
+  margin-bottom: 8px;
+}
+
+.header, .title-row-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.title-row-header {
+  padding: 10px 0px;
+}
+
+.header-timestamp {
+  margin: 0px;
+  color: #a0a0a0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.block-number {
+  color: #00c3ff;
+                margin: 0px;
+                font-size: 20px;
+                font-weight: 600;
+                font-family: chakra petch;
+                letter-spacing: 1px;
+}
+
+
+/* Remove cursor and make sure row is link again */
+.blocks-table-row-2 {
+
+          display: flex;
+              align-items: center;
+              padding: 12px;
+          /* height: 96px; */
+          box-sizing: border-box;
+          gap: 16px;
+          border-radius: 4px;
+          background-color: #181818;
+          cursor: pointer;
+}
+
+.blocks-table-row-2:hover {
+  background-color: #FA8A000D;
+}
+
+.block-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fa8a001a;
+            border: 1px solid #fa8a0033;
+            width: 72px;
+            height: 72px;
+            border-radius: 2px;
+}
+
+.body-block {
+  margin-top: 5px;
+      display: flex;
+}
+
+.block-details {
+  width: 100%;
+}
+
+.block-details-2 {
+  display: flex;
+  font-size: 11px;
+  gap: 8px;
+}
+
+.block-details-2 p {
+  margin: 0px;
+}
+
+.mining-details {
+  display: flex;
+                  font-size: 14px;
+                  display: flex;
+                  gap: 16px;
+                  align-items: center;
+                  margin-top: 4px;
+}
+
+.mining-pool {
+  margin: 0px;
+  font-size: 14px;
+  font-family: chakra petch;
+}
+
+.mining-fees {
+margin: 0px;
+                    color: #ff9417;
+                    font-size: 11px;
+                    font-weight: bold;
+}
+
+.block-bottom-details {
+  display: flex;
+}
+
+.block-usage {
+  margin-left: auto;
+  margin-top: auto;
+      margin-bottom: 5px;
+}
+
+.usage-number {
+  font-size: 14px;
+  margin-left: auto;
+}
+
+.usage-bar {
+  position: relative;
+  background-color: #262626;
+  border-radius: 13px;
+  width: 162px;
+  height: 5px;
+}
+
+.usage-bar-fill {
+  background-color:  #FA8A00;
+  height: 100%;
+  border-radius: 13px;
+}
+
+.block-container {
+      background-color: #1c1c1c;
+      padding: 24px;
+}
+
+/* MOVE CLOSE TO OLD BLOCK CONTAINER */
+.blocks-table {
+  display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background-color: transparent;
+      box-shadow: none;
+      padding: 0px;
+}
+
+.usage-and-tooltip {
+  display: flex;
+}
+
+
+
