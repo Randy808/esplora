@@ -91,6 +91,7 @@ export default function main({ DOM, HTTP, route, storage, scanner: scan$, search
 
   , togTx$    = click('[data-toggle-tx]').map(d => d.toggleTx).merge(page$.mapTo(null), expandTx$)
   , togBlock$ = click('[data-toggle-block]').map(d => d.toggleBlock).merge(page$.mapTo(null), expandBl$)
+  , togPendingBlockDetails$ = click('[data-toggle-pending-block-details]')
   , togTheme$ = click('.toggle-theme')
 
   , copy$     = click('[data-clipboard-copy]').map(d => d.clipboardCopy)
@@ -181,6 +182,10 @@ export default function main({ DOM, HTTP, route, storage, scanner: scan$, search
   // Currently collapsed tx/block ("details")
   , openTx$ = togTx$.startWith(null).scan((prev, txid) => prev == txid ? null : txid)
   , openBlock$ = togBlock$.startWith(null).scan((prev, blockhash) => prev == blockhash ? null : blockhash)
+  , pendingBlockDetailsOpen$ = togPendingBlockDetails$.mapTo(S => !S)
+      .merge(page$.mapTo(_ => false))
+      .startWith(false)
+      .scan((S, mod) => mod(S))
 
   // Spending txs map (reset on every page nav)
   , spends$ = O.merge(
@@ -269,6 +274,7 @@ export default function main({ DOM, HTTP, route, storage, scanner: scan$, search
   // App state
   , state$ = combine({ t$, error$, tipHeight$, spends$
                      , goBlocks$, blocks$, nextBlocks$, prevBlocks$, dashboardState$
+                     , pendingBlockDetailsOpen$
                      , goBlock$, block$, blockStatus$, blockTxs$, nextBlockTxs$, prevBlockTxs$, openBlock$
                      , mempool$, mempoolRecent$, feeEst$
                      , tx$, txAnalysis$, openTx$

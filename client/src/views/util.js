@@ -76,6 +76,35 @@ export const formatNumber = (s, precision=null) => {
   return whole + (dec != null ? '.'+dec : '')
 }
 
+export const formatRelativeTime = (fromDate, toDate = new Date()) => {
+  if (typeof fromDate === 'number') {
+    fromDate = fromDate < 1e12
+      ? new Date(fromDate * 1000)
+      : new Date(fromDate)
+  }
+
+  const diffSeconds = Math.floor((toDate - fromDate) / 1000)
+
+  if (diffSeconds < 5) return 'just now'
+  if (diffSeconds < 60) return `${diffSeconds} seconds ago`
+
+  const diffMinutes = Math.floor(diffSeconds / 60)
+  if (diffMinutes < 60) {
+    return diffMinutes === 1 ? '1 minute ago' : `${diffMinutes} minutes ago`
+  }
+
+  const diffHours = Math.floor(diffMinutes / 60)
+  if (diffHours < 24) {
+    return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`
+  }
+
+  const diffDays = Math.floor(diffHours / 24)
+  return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`
+}
+
+export const getBlockPercentageUsed = blockWeight =>
+  Math.round((blockWeight / 4000000) * 10000) / 100
+
 export const formatJson = obj =>
   JSON.stringify(obj, null, 1)
     //.replace(/^ /mg, '')

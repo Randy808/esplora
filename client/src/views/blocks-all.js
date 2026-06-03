@@ -5,14 +5,9 @@ import { blks } from './blocks'
 const isTouch = process.browser && ('ontouchstart' in window)
 
 const homeLayout = (body, { t, activeTab, ...S }) => layout(
- <div>
-    { body }
-  </div>
+  body
 , { t, isTouch, activeTab, ...S })
 
 export const recentBlocks = ({ t, blocks, loading, ...S }) => homeLayout(
-      <div className="container">
-      { blks(blocks, false, true, { t, loading, ...S }) }
-      </div>
+    blks(blocks, false, true, { t, loading, ...S })
   , { ...S, t, activeTab: 'recentBlocks' })
-

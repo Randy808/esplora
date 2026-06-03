@@ -1,53 +1,20 @@
 import Snabbdom from "snabbdom-pragma";
-import { formatTime, formatNumber } from "./util";
+import { formatNumber, formatRelativeTime, getBlockPercentageUsed } from "./util";
 import loader from "../components/loading";
 
 const staticRoot = process.env.STATIC_ROOT || "";
 
-function getBlockPercentageUsed(blockWeight) {
-  return Math.round((blockWeight / 4_000_000) * 10_000) / 100;
-}
-
-function timeAgo(fromDate, toDate = new Date()) {
-  if (typeof fromDate === "number") {
-    // Treat 10-digit Unix timestamps as seconds, 13-digit as milliseconds
-    fromDate = fromDate < 1e12
-      ? new Date(fromDate * 1000)
-      : new Date(fromDate);
-  }
-
-  const diffMs = toDate - fromDate;
-  const diffSeconds = Math.floor(diffMs / 1000);
-
-  if (diffSeconds < 5) return "just now";
-  if (diffSeconds < 60) return `${diffSeconds} seconds ago`;
-
-  const diffMinutes = Math.floor(diffSeconds / 60);
-  if (diffMinutes < 60) {
-    return diffMinutes === 1 ? "1 minute ago" : `${diffMinutes} minutes ago`;
-  }
-
-  const diffHours = Math.floor(diffMinutes / 60);
-  if (diffHours < 24) {
-    return diffHours === 1 ? "1 hour ago" : `${diffHours} hours ago`;
-  }
-
-  const diffDays = Math.floor(diffHours / 24);
-  return diffDays === 1 ? "1 day ago" : `${diffDays} days ago`;
-}
-
-function makeRows(blockWeight) {
-  let GRID_LENGTH = 15;
+function makeBlockGrid(blockWeight, gridLength) {
   let percentFilled = Math.ceil(
-    (blockWeight / 4_000_000) * (GRID_LENGTH * GRID_LENGTH),
+    (blockWeight / 4_000_000) * (gridLength * gridLength),
   );
   let el = [];
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < gridLength; i++) {
     let h = [];
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < gridLength; i++) {
       h.push(
         <div
-          className={`title-block-square ${percentFilled > 0 ? "title-block-square-used" : ""}`}
+          className={`pending-block-grid-cell ${percentFilled > 0 ? "pending-block-grid-cell-filled" : ""}`}
         ></div>,
       );
 
@@ -55,7 +22,7 @@ function makeRows(blockWeight) {
         percentFilled--;
       }
     }
-    el.push(<div className="title-block-square-row">{h}</div>);
+    el.push(<div className="pending-block-grid-row">{h}</div>);
   }
 
   return el;
@@ -74,65 +41,105 @@ function getPendingBlockStat(title, value) {
 const WIDTH = 23;
 
 export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
-  <div className="block-container">
-    <div className="table-heading">
+  <div className="latest-blocks-container">
+    <div className="blocks-heading">
       <div className="block-header-icon-container">
         <img src="img/icons/block-icon.svg" />
       </div>
-      <h1 className="table-heading-title">Latest Blocks</h1>
-      <img className="table-heading-tooltip" src="img/icons/tooltip.svg" />
+      <h1 className="blocks-heading-title">Latest Blocks</h1>
+      <img className="blocks-heading-tooltip" src="img/icons/tooltip.svg" />
     </div>
 
-    <div className="title-row">
-      <div className="block-template">{makeRows(2_000_838)}</div>
+    {viewMore ? <div className="pending-block-card">
 
-      <div className="pending-block-details">
-        <div className="header">
-          <p className="block-number">#{(blocks?.[0]?.height + 1).toLocaleString()}</p>
+      <div className="pending-block-card-summary">
+        <div className="pending-block-grid">{makeBlockGrid(2_000_838, 15)}</div>
 
-          <p className="header-timestamp">in ~10 minutes</p>
-        </div>
+        <div className="pending-block-details">
+          <div className="block-card-header">
+            <p className="block-number">
+              {blocks?.[0] ? `#${(blocks[0].height + 1).toLocaleString()}` : "-"}
+            </p>
 
-        <div className="pending-block-stats">
-          {getPendingBlockStat("AVG FEE", "-")}
-          {getPendingBlockStat("TRANSACTIONS", "-")}
-          {getPendingBlockStat("SIZE", "-")}
-          {getPendingBlockStat("TOTAL FEE COLLECTED", "-")}
-        </div>
+            <p className="block-timestamp">in ~10 minutes</p>
+            <button className="block-details-button" type="button" data-togglePendingBlockDetails>
+              <img className="plus" src="img/icons/plus.svg"/> Details
+            </button>
+          </div>
 
-        <div className="progress-section">
-          <div className="block-filling">
-            <p className="block-filling-text">Block filling</p>
-             <div>
-                <p className="usage-number">
-                  {WIDTH}%
-                </p>{" "}
-                <div className="tootlip"></div>
+          <div className="pending-block-stats">
+            {getPendingBlockStat("AVG FEE", "-")}
+            {getPendingBlockStat("TRANSACTIONS", "-")}
+            {getPendingBlockStat("SIZE", "-")}
+            {getPendingBlockStat("TOTAL FEE COLLECTED", "-")}
+          </div>
+
+          <div className="pending-block-progress">
+            <div className="block-filling">
+              <p className="block-filling-text">Block filling</p>
+              <div>
+                <p className="usage-number">{WIDTH}%</p>{" "}
+                <div className="tooltip-icon"></div>
               </div>
+            </div>
+
+            <div className="pending-usage-bar">
+              <div
+                className="pending-usage-bar-fill"
+                style={{
+                  width: `${WIDTH}%`,
+                  backgroundSize: `${100*(100/WIDTH)}%`,
+                }}
+              ></div>
+            </div>
+
+            <p className="target-text">Target: 2,845 tx</p>
+
           </div>
-
-          <div className="pending-usage-bar">
-            <div
-              className="pending-usage-bar-fill"
-              style={{
-                width: `${WIDTH}%`,
-                backgroundSize: `${100*(100/WIDTH)}%`,
-              }}
-            ></div>
-          </div>
-
-          <p className="target-text">Target: 2,845 tx</p>
-
         </div>
-
-
       </div>
-    </div>
 
-    <svg className="dashed-line" aria-hidden="true">
-  <line x1="1" y1="2" x2="100%" y2="2" />
-</svg>
-    <p className="section-title">Blocks History</p>
+      { S.pendingBlockDetailsOpen ? <div className="expanded-block-details">
+        <div className="expanded-pending-block-grid-container">
+          <div className="pending-block-grid">
+            {makeBlockGrid(2_000_838, 50)}
+          </div>
+        </div>
+        <div className="expanded-block-details-stats">
+          <div className="expanded-block-details-row">
+            <div class="time-since-last-block">
+                <p className="block-details-panel-title">Time Since Last Block</p>
+                <p className="block-details-panel-value">8m 42s</p>
+
+                <p className="block-details-panel-footer">Block #922,598
+                </p>
+            </div>
+            <div className="block-transactions"></div>
+          </div>
+          <div className="expanded-block-details-row">
+            <div className="low-fee"></div>
+            <div className="avg-fee"></div>
+            <div className="high-fee"></div>
+          </div>
+          <div className="expanded-block-details-row">
+            <div className="total-fees-collected"></div>
+          </div>
+          <div className="expanded-block-details-row-bigger">
+            <div className="pending-transactions"></div>
+            <div className="block-weight"></div>
+          </div>
+          <div className="expanded-block-details-row-bigger">
+            <div className="mempool-congestion"></div>
+            <div className="transaction-types"></div>
+          </div>
+        </div>
+      </div> : ""}
+    </div> : ""}
+
+    {viewMore ? <svg className="blocks-history-divider" aria-hidden="true">
+      <line x1="1" y1="2" x2="100%" y2="2" />
+    </svg> : ""}
+    <p className="blocks-section-title">Blocks History</p>
     {!blocks ? (
       loader()
     ) : !blocks.length ? (
@@ -142,21 +149,21 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
         {blocks &&
           blocks.map((b) => (
             <div className="blocks-table-link-row">
-              <div className="blocks-table-row-2">
+              <div className="blocks-table-card">
                 <div className="block-icon-container">
                   <img src="img/icons/block-icon.svg" />
                 </div>
                 <div className="block-details">
-                  <div className="header">
+                  <div className="block-card-header">
                     <a href={`block/${b.id}`}>
                       <p className="block-number">#{b.height.toLocaleString()}</p>
                     </a>
 
-                    <p className="header-timestamp" title={new Date(b.timestamp*1000)}>{timeAgo(b.timestamp)}</p>
+                    <p className="block-timestamp" title={new Date(b.timestamp * 1000)}>{formatRelativeTime(b.timestamp)}</p>
                   </div>
-                  <div className="body-block">
+                  <div className="block-card-body">
                     <div>
-                      <div className="block-details-2">
+                      <div className="block-summary">
                         <p>~2 sats vbyte</p>
                         <p>{formatNumber(b.tx_count).toLocaleString()} Transactions</p>
                         <p>{formatNumber(b.size / 1_000_000).toLocaleString()} MB</p>
@@ -174,13 +181,13 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
                         <p className="usage-number">
                           {getBlockPercentageUsed(b.weight)}%
                         </p>{" "}
-                        <div className="tootlip"></div>
+                        <div className="tooltip-icon"></div>
                       </div>
                       <div className="usage-bar">
                         <div
                           className="usage-bar-fill"
                           style={{
-                            width: Math.round(b.weight / 4_000_000, 2) * 100,
+                            width: `${getBlockPercentageUsed(b.weight)}%`,
                           }}
                         ></div>
                       </div>
