@@ -4028,6 +4028,7 @@ h3.table-title{
   display: flex;
   gap: 8px;
   align-items: center;
+  height: 20px;
 }
 
 .block-timestamp {
@@ -4096,7 +4097,7 @@ h3.table-title{
 
 .block-card-body {
   display: flex;
-  margin-top: 5px;
+  margin-top: 9px;
 }
 
 .block-summary {
@@ -4113,8 +4114,9 @@ h3.table-title{
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-top: 4px;
+  margin-top: 8px;
   font-size: 14px;
+  height: 11px;
 }
 
 .mining-pool {
@@ -4128,6 +4130,7 @@ h3.table-title{
   color: #ff9417;
   font-size: 11px;
   font-weight: bold;
+  margin-top: 3px;
 }
 
 .block-bottom-details {
