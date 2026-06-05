@@ -3804,6 +3804,7 @@ h3.table-title{
   margin-top: 40px;
   background-color: #1c1c1c;
   padding: 24px;
+  border-radius: 12px;
 }
 
 .blocks-heading {
@@ -4193,3 +4194,67 @@ h3.table-title{
   color: #C5A422;
 }
 
+
+/***** TX TABLE *******/
+
+
+/* Consolidate class with new blocks table */
+.transactions-table-2 {
+  margin-top: 40px;
+  background-color: #1c1c1c;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.transaction-table-body {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transaction-table-title-row {
+  display: flex;
+  margin-top: 12px;
+  font-size: 10px;
+  padding: 0px 12px;
+}
+
+.transaction-table-transaction-id {
+  flex: 1;
+}
+
+.transaction-table-transaction-value {
+  flex: 1;
+}
+
+.transaction-table-transaction-size {
+  flex: .5;
+}
+
+.transaction-table-transaction-fee {
+  flex: .5;
+  text-align: right;
+}
+
+.transaction-table-row {
+  display: flex;
+  background-color: #181818;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.transaction-table-row:hover {
+  background-color: #FF94170D;
+}
+
+.transaction-table-row .transaction-table-transaction-id {
+  color: #00C3FF;
+  font-weight: 400;
+}
+
+.transaction-table-row .transaction-table-transaction-fee {
+  color: #17C964;
+}
