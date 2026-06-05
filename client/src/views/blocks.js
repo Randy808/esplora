@@ -62,14 +62,14 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
           </div>
 
           <div className="pending-block-details">
-            <div className="block-card-header">
+            <div className="pending-block-card-header">
               <p className="block-number">
                 {blocks?.[0]
                   ? `#${(blocks[0].height + 1).toLocaleString()}`
                   : "-"}
               </p>
 
-              <p className="block-timestamp">in ~10 minutes</p>
+              <p className="pending-block-timestamp">in ~10 minutes</p>
               <button
                 className="block-details-button"
                 type="button"
@@ -222,44 +222,45 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
                       className="block-timestamp"
                       title={new Date(b.timestamp * 1000)}
                     >
-                      {formatRelativeTime(b.timestamp)}
+                      {formatRelativeTime(b.timestamp)?.toUpperCase()}
                     </p>
                   </div>
                   <div className="block-card-body">
-                    <div>
-                      <div className="block-summary">
-                        <p>~2 sats vbyte</p>
-                        <p>
-                          {formatNumber(b.tx_count).toLocaleString()}{" "}
-                          Transactions
-                        </p>
-                        <p>
-                          {formatNumber(b.size / 1_000_000).toLocaleString()} MB
-                        </p>
-                      </div>
-
-                      <div className="block-bottom-details">
-                        <div className="mining-details">
-                          <p className="mining-fees">1 BTC</p>
-                          <p className="mining-pool">AntPool</p>
-                        </div>
+                    <div className="block-stat">
+                      <div className="block-stat-title">TRANSACTIONS</div>
+                      <div className="block-stat-value">
+                        {formatNumber(b.tx_count).toLocaleString()}
                       </div>
                     </div>
-                    <div className="block-usage">
-                      <div className="usage-and-tooltip">
-                        <p className="usage-number">
-                          {getBlockPercentageUsed(b.weight)}%
-                        </p>{" "}
-                        <div className="tooltip-icon"></div>
+                    <div className="block-stat">
+                      <div className="block-stat-title">SIZE</div>
+                      <div className="block-stat-value">
+                        {formatNumber(b.size / 1_000_000).toLocaleString()} MB
                       </div>
-                      <div className="usage-bar">
-                        <div
-                          className="usage-bar-fill"
-                          style={{
-                            width: `${getBlockPercentageUsed(b.weight)}%`,
-                          }}
-                        ></div>
+                    </div>
+
+                    <div className="block-stat">
+                      <div className="block-stat-title">MINER</div>
+                      <div className="block-stat-value">
+                        -
                       </div>
+                    </div>
+                  </div>
+
+                  <div className="block-usage">
+                    <div className="usage-and-tooltip">
+                      <p className="usage-number">
+                        {getBlockPercentageUsed(b.weight)}%
+                      </p>{" "}
+                      <div className="tooltip-icon"></div>
+                    </div>
+                    <div className="usage-bar">
+                      <div
+                        className="usage-bar-fill"
+                        style={{
+                          width: `${getBlockPercentageUsed(b.weight)}%`,
+                        }}
+                      ></div>
                     </div>
                   </div>
                 </div>

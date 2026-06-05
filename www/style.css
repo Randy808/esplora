@@ -3848,6 +3848,20 @@ h3.table-title{
   background-color: #181818;
 }
 
+.pending-block-card-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  height: 20px;
+}
+
+.pending-block-timestamp {
+  margin: 0;
+  color: #a0a0a0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
 .pending-block-card-summary {
   display: flex;
 }
@@ -4028,15 +4042,15 @@ h3.table-title{
 
 .block-card-header {
   display: flex;
-  gap: 8px;
-  align-items: center;
-  height: 20px;
+  gap: 2px;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .block-timestamp {
   margin: 0;
   color: #a0a0a0;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 400;
 }
 
@@ -4074,12 +4088,12 @@ h3.table-title{
   padding: 12px;
   box-sizing: border-box;
   border-radius: 4px;
-  background-color: #181818;
+  background-color: #262626;
   cursor: pointer;
 }
 
 .blocks-table-card:hover {
-  background-color: #FA8A000D;
+  background-color: #26221D;
 }
 
 .block-icon-container {
@@ -4088,18 +4102,18 @@ h3.table-title{
   align-items: center;
   width: 72px;
   height: 72px;
-  border: 1px solid #fa8a0033;
-  border-radius: 2px;
-  background-color: #fa8a001a;
 }
 
 .block-details {
   width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
 .block-card-body {
   display: flex;
   margin-top: 9px;
+  gap: 12px;
 }
 
 .block-summary {
@@ -4112,37 +4126,32 @@ h3.table-title{
   margin: 0;
 }
 
-.mining-details {
+.block-stat {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-top: 8px;
+  flex-direction: column;
+  gap: 6px;
+  border-right: 1px solid #434445;
+  padding-right: 12px;
+  justify-content: center;
+}
+
+.block-stat:last-child {
+  border-right: none;
+}
+
+.block-stat-title {
+  font-size: 10px;
+    color: #B5BDC2;
+}
+
+.block-stat-value {
   font-size: 14px;
-  height: 11px;
-}
-
-.mining-pool {
-  margin: 0;
-  font-family: "Rigid Square", sans-serif;
-  font-size: 14px;
-}
-
-.mining-fees {
-  margin: 0;
-  color: #ff9417;
-  font-size: 11px;
-  font-weight: bold;
-  margin-top: 3px;
-}
-
-.block-bottom-details {
-  display: flex;
+    font-weight: 600;
 }
 
 .block-usage {
   margin-top: auto;
   margin-bottom: 5px;
-  margin-left: auto;
 }
 
 .usage-and-tooltip {
