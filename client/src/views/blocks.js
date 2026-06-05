@@ -4,45 +4,10 @@ import {
   formatRelativeTime,
   getBlockPercentageUsed,
 } from "./util";
+import blockDetailsCard from "./block-details-card";
 import loader from "../components/loading";
 
 const staticRoot = process.env.STATIC_ROOT || "";
-
-function makeBlockGrid(blockWeight, gridLength) {
-  let percentFilled = Math.ceil(
-    (blockWeight / 4_000_000) * (gridLength * gridLength),
-  );
-  let el = [];
-  for (let i = 0; i < gridLength; i++) {
-    let h = [];
-    for (let i = 0; i < gridLength; i++) {
-      h.push(
-        <div
-          className={`pending-block-grid-cell ${percentFilled > 0 ? "pending-block-grid-cell-filled" : ""}`}
-        ></div>,
-      );
-
-      if (percentFilled > 0) {
-        percentFilled--;
-      }
-    }
-    el.push(<div className="pending-block-grid-row">{h}</div>);
-  }
-
-  return el;
-}
-
-function getPendingBlockStat(title, value) {
-  return (
-    <div className="pending-block-stat">
-      <p className="pending-block-stat-header">{title}</p>
-      <p className="pending-block-stat-value">{value}</p>
-    </div>
-  );
-}
-
-/* TODO: REMOVE THIS AND USE ACTUAL PENDING BLOCK FILL AFTER ENDPOINT CHANGE IS MADE ON ELECTRS */
-const WIDTH = 23;
 
 export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
   <div className="latest-blocks-container">
@@ -54,140 +19,12 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
       <img className="blocks-heading-tooltip" src="img/icons/tooltip.svg" />
     </div>
 
-    {viewMore ? (
-      <div className="pending-block-card">
-        <div className="pending-block-card-summary">
-          <div className="pending-block-grid">
-            {makeBlockGrid(2_000_838, 15)}
-          </div>
-
-          <div className="pending-block-details">
-            <div className="pending-block-card-header">
-              <p className="block-number">
-                {blocks?.[0]
-                  ? `#${(blocks[0].height + 1).toLocaleString()}`
-                  : "-"}
-              </p>
-
-              <p className="pending-block-timestamp">in ~10 minutes</p>
-              <button
-                className="block-details-button"
-                type="button"
-                data-togglePendingBlockDetails
-              >
-                <img className="plus" src="img/icons/plus.svg" /> Details
-              </button>
-            </div>
-
-            <div className="pending-block-stats">
-              {getPendingBlockStat("AVG FEE", "-")}
-              {getPendingBlockStat("TRANSACTIONS", "-")}
-              {getPendingBlockStat("SIZE", "-")}
-              {getPendingBlockStat("TOTAL FEE COLLECTED", "-")}
-            </div>
-
-            <div className="pending-block-progress">
-              <div className="block-filling">
-                <p className="block-filling-text">Block filling</p>
-                <div>
-                  <p className="usage-number">{WIDTH}%</p>{" "}
-                  <div className="tooltip-icon"></div>
-                </div>
-              </div>
-
-              <div className="pending-usage-bar">
-                <div
-                  className="pending-usage-bar-fill"
-                  style={{
-                    width: `${WIDTH}%`,
-                    backgroundSize: `${100 * (100 / WIDTH)}%`,
-                  }}
-                ></div>
-              </div>
-
-              <p className="target-text">Target: 2,845 tx</p>
-            </div>
-          </div>
-        </div>
-
-        {S.pendingBlockDetailsOpen ? (
-          <div className="expanded-block-details">
-            <div className="expanded-pending-block-grid-container">
-              <div className="pending-block-grid">
-                {makeBlockGrid(2_000_838, 50)}
-              </div>
-            </div>
-            <div className="expanded-block-details-stats">
-              <div className="expanded-block-details-row">
-                <div class="time-since-last-block">
-                  <p className="block-details-panel-title">
-                    Time Since Last Block
-                  </p>
-                  <p className="block-details-panel-value">8m 42s</p>
-
-                  <p className="block-details-panel-footer">Block #922,598</p>
-                </div>
-                <div className="block-transactions">
-                  <p className="block-details-panel-title">Transactions</p>
-                  <p className="block-details-panel-value">2,637</p>
-
-                  <p className="block-details-panel-footer">Target 2,986</p>
-                </div>
-              </div>
-              <div className="expanded-block-details-row">
-                <div className="low-fee">
-                  <p className="block-details-panel-title">Low</p>
-                  <p className="block-details-panel-value">1.3 sat/vB</p>
-
-                  <p className="block-details-panel-footer">0.0000046</p>
-                </div>
-                <div className="avg-fee">
-                  <p className="block-details-panel-title">Average</p>
-                  <p className="block-details-panel-value">1.3 sat/vB</p>
-
-                  <p className="block-details-panel-footer">0.0000046</p>
-                </div>
-                <div className="high-fee">
-                  <p className="block-details-panel-title">High</p>
-                  <p className="block-details-panel-value">1.3 sat/vB</p>
-
-                  <p className="block-details-panel-footer">0.0000046</p>
-                </div>
-              </div>
-              <div className="expanded-block-details-row">
-                <div className="total-fees-collected">
-                  <p className="block-details-panel-title">
-                    Total Fees Collected
-                  </p>
-                  <p className="block-details-panel-value">0.037 BTC</p>
-
-                  <p className="block-details-panel-footer">$2,482.29 USD</p>
-                </div>
-              </div>
-              <div className="expanded-block-details-row-bigger">
-                <div className="pending-transactions">
-                  <p className="block-details-panel-title">
-                    Pending Transactions
-                  </p>
-                  <p className="block-details-panel-value">45,823</p>
-
-                  {/* <p className="block-details-panel-footer">$2,482.29 USD</p> */}
-                </div>
-                <div className="block-weight"></div>
-              </div>
-              <div className="expanded-block-details-row-bigger">
-                <div className="mempool-congestion"></div>
-                <div className="transaction-types"></div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
-      </div>
-    ) : (
-      ""
-    )}
+    {viewMore
+      ? blockDetailsCard({
+          block: blocks?.[0] && { height: blocks[0].height + 1 },
+          detailsOpen: S.pendingBlockDetailsOpen,
+        })
+      : ""}
 
     {viewMore ? (
       <svg className="blocks-history-divider" aria-hidden="true">

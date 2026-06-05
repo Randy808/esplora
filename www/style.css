@@ -3839,7 +3839,7 @@ h3.table-title{
   width: 26px;
 }
 
-.pending-block-card {
+.block-details-card {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -3848,7 +3848,7 @@ h3.table-title{
   background-color: #181818;
 }
 
-.pending-block-card-header {
+.block-details-card-header {
   display: flex;
   gap: 8px;
   align-items: center;
@@ -3862,7 +3862,7 @@ h3.table-title{
   font-weight: 400;
 }
 
-.pending-block-card-summary {
+.block-details-card-summary {
   display: flex;
 }
 
