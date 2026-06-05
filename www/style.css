@@ -3992,7 +3992,8 @@ h3.table-title{
 .block-details-panel-value {
   font-size: 20px;
   font-weight: 700;
-  margin-top: 12px;
+  /* TODO: See if we can clip font bounding box, but keep this val if not */
+  margin-top: 9px;
 }
 
 .block-details-panel-footer {
@@ -4175,3 +4176,20 @@ h3.table-title{
   background-color: transparent;
   box-shadow: none;
 }
+
+.low-fee .block-details-panel-value {
+  color: #22C55E
+}
+
+.high-fee .block-details-panel-value {
+  color: #EB4028
+}
+
+.total-fees-collected .block-details-panel-value {
+  color: #FA8A00;
+}
+
+.pending-transactions .block-details-panel-value {
+  color: #C5A422;
+}
+

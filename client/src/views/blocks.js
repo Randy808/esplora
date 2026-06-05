@@ -1,5 +1,9 @@
 import Snabbdom from "snabbdom-pragma";
-import { formatNumber, formatRelativeTime, getBlockPercentageUsed } from "./util";
+import {
+  formatNumber,
+  formatRelativeTime,
+  getBlockPercentageUsed,
+} from "./util";
 import loader from "../components/loading";
 
 const staticRoot = process.env.STATIC_ROOT || "";
@@ -50,95 +54,148 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
       <img className="blocks-heading-tooltip" src="img/icons/tooltip.svg" />
     </div>
 
-    {viewMore ? <div className="pending-block-card">
-
-      <div className="pending-block-card-summary">
-        <div className="pending-block-grid">{makeBlockGrid(2_000_838, 15)}</div>
-
-        <div className="pending-block-details">
-          <div className="block-card-header">
-            <p className="block-number">
-              {blocks?.[0] ? `#${(blocks[0].height + 1).toLocaleString()}` : "-"}
-            </p>
-
-            <p className="block-timestamp">in ~10 minutes</p>
-            <button className="block-details-button" type="button" data-togglePendingBlockDetails>
-              <img className="plus" src="img/icons/plus.svg"/> Details
-            </button>
+    {viewMore ? (
+      <div className="pending-block-card">
+        <div className="pending-block-card-summary">
+          <div className="pending-block-grid">
+            {makeBlockGrid(2_000_838, 15)}
           </div>
 
-          <div className="pending-block-stats">
-            {getPendingBlockStat("AVG FEE", "-")}
-            {getPendingBlockStat("TRANSACTIONS", "-")}
-            {getPendingBlockStat("SIZE", "-")}
-            {getPendingBlockStat("TOTAL FEE COLLECTED", "-")}
-          </div>
+          <div className="pending-block-details">
+            <div className="block-card-header">
+              <p className="block-number">
+                {blocks?.[0]
+                  ? `#${(blocks[0].height + 1).toLocaleString()}`
+                  : "-"}
+              </p>
 
-          <div className="pending-block-progress">
-            <div className="block-filling">
-              <p className="block-filling-text">Block filling</p>
-              <div>
-                <p className="usage-number">{WIDTH}%</p>{" "}
-                <div className="tooltip-icon"></div>
+              <p className="block-timestamp">in ~10 minutes</p>
+              <button
+                className="block-details-button"
+                type="button"
+                data-togglePendingBlockDetails
+              >
+                <img className="plus" src="img/icons/plus.svg" /> Details
+              </button>
+            </div>
+
+            <div className="pending-block-stats">
+              {getPendingBlockStat("AVG FEE", "-")}
+              {getPendingBlockStat("TRANSACTIONS", "-")}
+              {getPendingBlockStat("SIZE", "-")}
+              {getPendingBlockStat("TOTAL FEE COLLECTED", "-")}
+            </div>
+
+            <div className="pending-block-progress">
+              <div className="block-filling">
+                <p className="block-filling-text">Block filling</p>
+                <div>
+                  <p className="usage-number">{WIDTH}%</p>{" "}
+                  <div className="tooltip-icon"></div>
+                </div>
+              </div>
+
+              <div className="pending-usage-bar">
+                <div
+                  className="pending-usage-bar-fill"
+                  style={{
+                    width: `${WIDTH}%`,
+                    backgroundSize: `${100 * (100 / WIDTH)}%`,
+                  }}
+                ></div>
+              </div>
+
+              <p className="target-text">Target: 2,845 tx</p>
+            </div>
+          </div>
+        </div>
+
+        {S.pendingBlockDetailsOpen ? (
+          <div className="expanded-block-details">
+            <div className="expanded-pending-block-grid-container">
+              <div className="pending-block-grid">
+                {makeBlockGrid(2_000_838, 50)}
               </div>
             </div>
+            <div className="expanded-block-details-stats">
+              <div className="expanded-block-details-row">
+                <div class="time-since-last-block">
+                  <p className="block-details-panel-title">
+                    Time Since Last Block
+                  </p>
+                  <p className="block-details-panel-value">8m 42s</p>
 
-            <div className="pending-usage-bar">
-              <div
-                className="pending-usage-bar-fill"
-                style={{
-                  width: `${WIDTH}%`,
-                  backgroundSize: `${100*(100/WIDTH)}%`,
-                }}
-              ></div>
+                  <p className="block-details-panel-footer">Block #922,598</p>
+                </div>
+                <div className="block-transactions">
+                  <p className="block-details-panel-title">Transactions</p>
+                  <p className="block-details-panel-value">2,637</p>
+
+                  <p className="block-details-panel-footer">Target 2,986</p>
+                </div>
+              </div>
+              <div className="expanded-block-details-row">
+                <div className="low-fee">
+                  <p className="block-details-panel-title">Low</p>
+                  <p className="block-details-panel-value">1.3 sat/vB</p>
+
+                  <p className="block-details-panel-footer">0.0000046</p>
+                </div>
+                <div className="avg-fee">
+                  <p className="block-details-panel-title">Average</p>
+                  <p className="block-details-panel-value">1.3 sat/vB</p>
+
+                  <p className="block-details-panel-footer">0.0000046</p>
+                </div>
+                <div className="high-fee">
+                  <p className="block-details-panel-title">High</p>
+                  <p className="block-details-panel-value">1.3 sat/vB</p>
+
+                  <p className="block-details-panel-footer">0.0000046</p>
+                </div>
+              </div>
+              <div className="expanded-block-details-row">
+                <div className="total-fees-collected">
+                  <p className="block-details-panel-title">
+                    Total Fees Collected
+                  </p>
+                  <p className="block-details-panel-value">0.037 BTC</p>
+
+                  <p className="block-details-panel-footer">$2,482.29 USD</p>
+                </div>
+              </div>
+              <div className="expanded-block-details-row-bigger">
+                <div className="pending-transactions">
+                  <p className="block-details-panel-title">
+                    Pending Transactions
+                  </p>
+                  <p className="block-details-panel-value">45,823</p>
+
+                  {/* <p className="block-details-panel-footer">$2,482.29 USD</p> */}
+                </div>
+                <div className="block-weight"></div>
+              </div>
+              <div className="expanded-block-details-row-bigger">
+                <div className="mempool-congestion"></div>
+                <div className="transaction-types"></div>
+              </div>
             </div>
-
-            <p className="target-text">Target: 2,845 tx</p>
-
           </div>
-        </div>
+        ) : (
+          ""
+        )}
       </div>
+    ) : (
+      ""
+    )}
 
-      { S.pendingBlockDetailsOpen ? <div className="expanded-block-details">
-        <div className="expanded-pending-block-grid-container">
-          <div className="pending-block-grid">
-            {makeBlockGrid(2_000_838, 50)}
-          </div>
-        </div>
-        <div className="expanded-block-details-stats">
-          <div className="expanded-block-details-row">
-            <div class="time-since-last-block">
-                <p className="block-details-panel-title">Time Since Last Block</p>
-                <p className="block-details-panel-value">8m 42s</p>
-
-                <p className="block-details-panel-footer">Block #922,598
-                </p>
-            </div>
-            <div className="block-transactions"></div>
-          </div>
-          <div className="expanded-block-details-row">
-            <div className="low-fee"></div>
-            <div className="avg-fee"></div>
-            <div className="high-fee"></div>
-          </div>
-          <div className="expanded-block-details-row">
-            <div className="total-fees-collected"></div>
-          </div>
-          <div className="expanded-block-details-row-bigger">
-            <div className="pending-transactions"></div>
-            <div className="block-weight"></div>
-          </div>
-          <div className="expanded-block-details-row-bigger">
-            <div className="mempool-congestion"></div>
-            <div className="transaction-types"></div>
-          </div>
-        </div>
-      </div> : ""}
-    </div> : ""}
-
-    {viewMore ? <svg className="blocks-history-divider" aria-hidden="true">
-      <line x1="1" y1="2" x2="100%" y2="2" />
-    </svg> : ""}
+    {viewMore ? (
+      <svg className="blocks-history-divider" aria-hidden="true">
+        <line x1="1" y1="2" x2="100%" y2="2" />
+      </svg>
+    ) : (
+      ""
+    )}
     <p className="blocks-section-title">Blocks History</p>
     {!blocks ? (
       loader()
@@ -156,17 +213,29 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
                 <div className="block-details">
                   <div className="block-card-header">
                     <a href={`block/${b.id}`}>
-                      <p className="block-number">#{b.height.toLocaleString()}</p>
+                      <p className="block-number">
+                        #{b.height.toLocaleString()}
+                      </p>
                     </a>
 
-                    <p className="block-timestamp" title={new Date(b.timestamp * 1000)}>{formatRelativeTime(b.timestamp)}</p>
+                    <p
+                      className="block-timestamp"
+                      title={new Date(b.timestamp * 1000)}
+                    >
+                      {formatRelativeTime(b.timestamp)}
+                    </p>
                   </div>
                   <div className="block-card-body">
                     <div>
                       <div className="block-summary">
                         <p>~2 sats vbyte</p>
-                        <p>{formatNumber(b.tx_count).toLocaleString()} Transactions</p>
-                        <p>{formatNumber(b.size / 1_000_000).toLocaleString()} MB</p>
+                        <p>
+                          {formatNumber(b.tx_count).toLocaleString()}{" "}
+                          Transactions
+                        </p>
+                        <p>
+                          {formatNumber(b.size / 1_000_000).toLocaleString()} MB
+                        </p>
                       </div>
 
                       <div className="block-bottom-details">
