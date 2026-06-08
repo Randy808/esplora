@@ -1,5 +1,5 @@
 import Snabbdom from "snabbdom-pragma";
-import { formatSat, formatNumber } from "./util";
+import { formatSat, formatNumber, truncateTxid } from "./util";
 import loader from "../components/loading";
 
 const staticRoot = process.env.STATIC_ROOT || "";
@@ -56,9 +56,9 @@ export const transactions = (txs, viewMore, { t }) => (
             const feerate = txOverview.fee / txOverview.vsize;
             return (
               <div className="transaction-table-row">
-                <div className="transaction-table-transaction-id">
-                  78b9f...92754
-                </div>
+                <a className="transaction-table-transaction-id" href={`tx/${txOverview.txid}`}>
+                  {truncateTxid(txOverview.txid)}
+                </a>
                 <div className="transaction-table-transaction-value">
                   {formatSat(txOverview.value)}
                 </div>
@@ -71,9 +71,9 @@ export const transactions = (txs, viewMore, { t }) => (
 
         {txs && viewMore ? (
           <a className="view-more font-link-semibold" href="tx/recent">
-            <span>{t`View more transactions`}</span>
+            <span>{t`See more`}</span>
             <div>
-              <img alt="" src={`${staticRoot}img/icons/arrow_right_blu.png`} />
+              <img alt="" src={`${staticRoot}img/icons/arrow-right-blue.svg`} />
             </div>
           </a>
         ) : (

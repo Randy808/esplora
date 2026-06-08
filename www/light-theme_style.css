@@ -157,14 +157,6 @@ body.theme-light {
     color: rgba(21, 24, 28, 1) !important;
 }
 
-.theme-light .blocks-table-link-row:nth-child(odd) {
-    background: #fff;
-}
-
-.theme-light .transactions-table-link-row:nth-child(odd) {
-    background: #fff;
-}
-
 .theme-light .search-bar {
     background-color: #fff;
 }

@@ -121,13 +121,14 @@ export const linkToParentAddr = (addr, label=addr) =>
 
 export const linkToAddr = addr => <a href={`address/${addr}`}>{addr}</a>
 
-export const formatVMB = bytes =>
-  bytes >= 10000 || bytes == 0 ? `${(bytes / 1000000).toFixed(2)} vMB`
-: '< 0.01 vMB'
+export const formatVMB = (bytes, suffix) =>
+  bytes >= 10000 || bytes == 0 ? `${(bytes / 1000000).toFixed(2)} ${suffix ?? "vMB"}`
+: `< 0.01  ${suffix ?? "vMB"}`
 
 
 export const strTruncate  = (str) => str.substr(0, 10) + '...' + str.substr(str.length-4, str.length);
 
+export const truncateTxid  = (txid) => txid.substr(0, 5) + '...' + txid.substr(txid.length - 5, txid.length);
 
 // Convert hex string to base64
 export const hexToBase64 = (hex) => {

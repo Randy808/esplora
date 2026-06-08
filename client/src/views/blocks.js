@@ -3,6 +3,7 @@ import {
   formatNumber,
   formatRelativeTime,
   getBlockPercentageUsed,
+  formatVMB,
 } from "./util";
 import blockDetailsCard from "./block-details-card";
 import loader from "../components/loading";
@@ -19,7 +20,7 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
       <img className="blocks-heading-tooltip" src="img/icons/tooltip.svg" />
     </div>
 
-    {viewMore
+    {/* {viewMore
       ? blockDetailsCard({
           block: blocks?.[0] && { height: blocks[0].height + 1 },
           detailsOpen: S.pendingBlockDetailsOpen,
@@ -33,7 +34,7 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
     ) : (
       ""
     )}
-    <p className="blocks-section-title">Blocks History</p>
+    {viewMore ? <p className="blocks-section-title">Blocks History</p> : ""} */}
     {!blocks ? (
       loader()
     ) : !blocks.length ? (
@@ -41,19 +42,20 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
     ) : (
       <div className="blocks-table">
         {blocks &&
-          blocks.map((b) => (
-            <div className="blocks-table-link-row">
-              <div className="blocks-table-card">
+          blocks.map((b, index) => (
+            <a className="blocks-table-link-row" href={`block/${b.id}`}>
+              <div className={`blocks-table-card ${index === 0 ? "first-blocks-table-card" : ""}`}>
                 <div className="block-icon-container">
                   <img src="img/icons/block-icon.svg" />
                 </div>
                 <div className="block-details">
                   <div className="block-card-header">
-                    <a href={`block/${b.id}`}>
-                      <p className="block-number">
-                        #{b.height.toLocaleString()}
-                      </p>
-                    </a>
+                    <div className="block-card-top-header">
+                        <p className="block-number">
+                          #{b.height.toLocaleString()}
+                        </p>
+                      {index === 0 ? <div className="latest-block-badge">Latest</div> : ""}
+                    </div>
 
                     <p
                       className="block-timestamp"
@@ -72,16 +74,16 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
                     <div className="block-stat">
                       <div className="block-stat-title">SIZE</div>
                       <div className="block-stat-value">
-                        {formatNumber(b.size / 1_000_000).toLocaleString()} MB
+                        {formatVMB(b.size, "MB")}
                       </div>
                     </div>
 
-                    <div className="block-stat">
+                    {/* <div className="block-stat">
                       <div className="block-stat-title">MINER</div>
                       <div className="block-stat-value">
                         -
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="block-usage">
@@ -102,18 +104,8 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
                   </div>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
-        {blocks && viewMore ? (
-          <a className="view-more font-link-semibold" href="blocks/recent">
-            <span>{t`View more blocks`}</span>
-            <div>
-              <img alt="" src={`${staticRoot}img/icons/arrow_right_blu.png`} />
-            </div>
-          </a>
-        ) : (
-          ""
-        )}
         {loadMore ? (
           <div className="load-more-container">
             <div>
@@ -131,6 +123,16 @@ export const blks = (blocks, viewMore, loadMore, { t, loading, ...S }) => (
           ""
         )}
       </div>
+    )}
+    {blocks && viewMore ? (
+      <a className="view-more font-link-semibold" href="blocks/recent">
+        <span>{t`See more`}</span>
+        <div>
+          <img alt="" src={`${staticRoot}img/icons/arrow-right-blue.svg`} />
+        </div>
+      </a>
+    ) : (
+      ""
     )}
   </div>
 );
