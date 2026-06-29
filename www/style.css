@@ -3870,3 +3870,38 @@ a.back-link img{
     width: 14px;
   }
 }
+
+.difficulty-adjustment {
+  margin-top: 40px;
+    background-color: var(--surface-primary-color);
+    padding: 24px;
+    border-radius: 12px;
+}
+
+.divider {
+  width: 1px; height: 30px; background-color: white
+}
+
+.difficulty-adjustment-body {
+  display: flex; margin-top: 12px; justify-content: space-between;
+}
+
+.difficulty-stat {
+  flex: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column
+}
+
+.difficulty-stat-title {
+  font-size: 10px;
+    color: #B5BDC2;
+}
+
+.difficulty-stat-value.success {
+  color: #17C964;
+}
+
+.difficulty-stat-value.danger {
+  color: #DB3B3E;
+}

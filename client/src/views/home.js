@@ -1,6 +1,7 @@
 import layout from './layout'
 import { blks } from './blocks'
 import { transactions } from './transactions'
+import difficultyAdjustment from './difficulty-adjustment'
 
 const isTouch = process.browser && ('ontouchstart' in window)
 
@@ -15,6 +16,7 @@ return (homeLayout(
   <div key="dashBoard">
       { blks( dashblocks, true, { t, ...S }) }
       { transactions( dashTxs, true, { t, ...S } ) }
+      { difficultyAdjustment({ blocks: dashblocks, ...S }) }
   </div>
   , { ...S, t, activeTab: 'dashBoard' })
 )}
