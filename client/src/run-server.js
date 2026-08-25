@@ -3,6 +3,7 @@ import { makeHTTPDriver } from '@cycle/http'
 import { makeHTMLDriver } from '@cycle/html'
 import makeRouteDriver from './driver/route'
 import makeSearchDriver from './driver/search'
+import makeAutocompleteDriver from './driver/autocomplete'
 import { Observable as O } from './rxjs'
 
 import main from './app'
@@ -72,6 +73,7 @@ export default function render(pathname, args='', body, locals={}, cb) {
   , storage: _ => ({ local: { getItem: key => O.of(locals[key]) } })
   , scanner: _ => O.empty()
   , search: makeSearchDriver(apiBase)
+  , autocomplete: makeAutocompleteDriver(apiBase)
   , state: state$ => O.from(state$).subscribe(stateUpdate)
   // unblinding is disabled with server-side rendering
   , blinding: _ => O.empty(),

@@ -270,6 +270,11 @@ when electrs indexes a new chain tip. Responses include `Cache-Control: no-store
 
 ## Assets (Elements/Liquid only)
 
+Registry enrichment is enabled by starting electrs with
+`--asset-registry-url <url>`. The URL is the base URL of a v2 Liquid asset
+registry service. Without this option, asset endpoints continue to return
+locally indexed chain data, while `GET /assets/registry` returns an empty list.
+
 ### `GET /asset/:asset_id`
 
 Get information about an asset.
@@ -307,13 +312,53 @@ For user-issued assets, returns an object with:
   - `reissuance_tokens`: the number of reissuance tokens
   - `burned_reissuance_tokens`: the number of reissuance tokens burned
 
-If the asset is available on the registry, the following fields are returned as well:
+If an issued asset is available from the configured v2 registry, the response
+also contains the following compatibility fields:
 
-- `contract`: the full json contract json committed in the issuance
-- `entity`: the entity linked to this asset. the only available type is currently `domain`, which is encoded as `{ "domain": "foobar.com>" }` (required)
-- `ticker`: a 3-5 characters ticker associated with the asset (optional)
-- `precision`: the number of decimal places for units of this asset (defaults to 0)
-- `name`: a description for the asset (up to 255 characters)
+- `contract`: the complete JSON contract committed to by the issuance. Unknown
+  fields and the distinction between omitted and explicit `null` optional
+  fields are preserved, allowing clients to verify the contract hash.
+- `entity`: the entity linked to the asset, for example
+  `{ "domain": "example.com" }`.
+- `ticker`: the optional ticker from the registry contract.
+- `precision`: the number of decimal places for units of the asset.
+- `name`: the asset name from the registry contract.
+
+The complete v2 registry record is additionally returned as `registry`, with:
+
+- `asset_id`
+- `contract`: contains `entity`, `name`, `precision`, `version`, an optional
+  `ticker`, and the contract's version-specific `initial_issuer_pubkey` or
+  `issuer_pubkey`, plus any additional contract fields
+- `initial_issuer_pubkey`
+- `initial_issuer_pubkey_source`
+- `current_issuer_pubkey`
+- `issuer_pubkey_history`
+- `mutable`: issuer-controlled mutable metadata
+- `admin`: registry administrator annotations, or `null`
+- `icon`: icon metadata, or `null`; relative icon paths are returned as
+  absolute URLs on the configured registry origin
+- `status`: the registry status, distinct from the top-level transaction
+  confirmation `status`
+- `created_at` and `updated_at`: registry timestamps
+
+Unknown fields returned by the v2 registry are preserved within `contract`,
+`icon`, and `registry`. These additions are backward-compatible for JSON
+clients that ignore unknown fields; clients that reject unknown fields must
+allow the new `registry` object and additional contract fields.
+
+Responses use `Cache-Control: no-store`. Individual registry lookups are
+cached internally for up to one second, including registry misses.
+
+If the asset exists locally but the registry is unavailable, this endpoint
+still returns HTTP 200 with chain-only asset information and the header:
+
+```
+X-Asset-Registry-Status: unavailable
+```
+
+When CORS is enabled, `X-Asset-Registry-Status` is included in
+`Access-Control-Expose-Headers`.
 
 Example native asset:
 
@@ -325,7 +370,7 @@ Example native asset:
 }
 ```
 
-Example user-issued asset:
+Example user-issued asset without registry metadata:
 
 ```
 {
@@ -337,6 +382,48 @@ Example user-issued asset:
   "status": { "confirmed": true, "block_height": 105, "block_hash": "7bf84f2aea30b02981a220943f543a6d6e7ac646d59ef76cff27dca8d27b2b67", "block_time": 1586248729 },
   "chain_stats": { "tx_count": 1, "issuance_count": 1, "issued_amount": 0, "burned_amount": 0, "has_blinded_issuances": true, "reissuance_tokens": 0, "burned_reissuance_tokens": 0 },
   "mempool_stats": { "tx_count": 0, "issuance_count": 0, "issued_amount": 0, "burned_amount": 0, "has_blinded_issuances": false, "reissuance_tokens": null, "burned_reissuance_tokens": 0 }
+}
+```
+
+When registry metadata is available, the same response is enriched as follows
+(chain and issuance fields are omitted here for brevity):
+
+```json
+{
+  "asset_id": "d8a317ce2c14241192cbb3ebdb9696250ca1251a58ba6251c29fcfe126c9ca1f",
+  "contract": {
+    "entity": { "domain": "example.com" },
+    "name": "Example Asset",
+    "precision": 8,
+    "ticker": "EXM",
+    "version": 1
+  },
+  "entity": { "domain": "example.com" },
+  "name": "Example Asset",
+  "precision": 8,
+  "ticker": "EXM",
+  "registry": {
+    "asset_id": "d8a317ce2c14241192cbb3ebdb9696250ca1251a58ba6251c29fcfe126c9ca1f",
+    "contract": {
+      "entity": { "domain": "example.com" },
+      "name": "Example Asset",
+      "precision": 8,
+      "ticker": "EXM",
+      "version": 1
+    },
+    "initial_issuer_pubkey": "02...",
+    "initial_issuer_pubkey_source": "contract",
+    "current_issuer_pubkey": "02...",
+    "issuer_pubkey_history": [],
+    "mutable": {},
+    "admin": null,
+    "icon": {
+      "href": "https://registry.example/v2/assets/d8a317ce2c14241192cbb3ebdb9696250ca1251a58ba6251c29fcfe126c9ca1f/icon/hash.png"
+    },
+    "status": "active",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-02T00:00:00Z"
+  }
 }
 ```
 
@@ -363,24 +450,102 @@ For issued assets, this is calculated as `{chain,mempool}_stats.issued_amount - 
 
 Not available for assets with blinded issuances.
 
-If `/decimal` is specified, returns the supply as a decimal according to the asset's divisibility.
-Otherwise, returned in base units.
+Without `/decimal`, the supply is returned in base units using only locally
+indexed chain data; this form does not contact the registry.
+
+With `/decimal`, the supply is returned as an exact decimal string according
+to the asset's registry precision. Decimal formatting uses integer arithmetic
+and does not lose precision for assets with large precision values. If an
+issued asset has no registry metadata, its precision defaults to zero. If a
+registry request fails while resolving the precision, the endpoint returns the
+corresponding registry error instead of silently treating the precision as
+zero.
 
 ### `GET /assets/registry`
 
-Get the list of issued assets in the asset registry.
+Get issued assets from the configured v2 asset registry, enriched with locally
+indexed chain and issuance information. Registry entries that are not yet in
+the local index are skipped rather than failing the entire page.
 
 Query string parameters:
 
-- `start_index`: the start index to use for paging. defaults to 0.
-- `limit`: maximum number of assets to return. defaults to 25, maximum 100.
-- `sort_field`: field to sort assets by. one of `name`, `ticker` or `domain`. defaults to `ticker`.
-- `sort_dir`: sorting direction. one of `asc` or `desc`. defaults to `asc`.
+- `start_index`: start index for paging. Defaults to `0`.
+- `limit`: maximum number of assets to return. Defaults to `25`, maximum
+  `100`.
+- `sort`: native v2 sort order. Supported values are:
+  - `asset_id_asc`
+  - `asset_id_desc`
+  - `domain_asc`
+  - `domain_desc`
+  - `name_asc`
+  - `name_desc`
+  - `ticker_asc`
+  - `ticker_desc`
+  - `created_at_asc`
+  - `created_at_desc`
+  - `updated_at_asc`
+  - `updated_at_desc`
+- `sort_field`: legacy field to sort by: `name`, `ticker`, or `domain`.
+  Defaults to `ticker` when `sort` is omitted.
+- `sort_dir`: legacy sorting direction: `asc` or `desc`. Defaults to `asc`.
+- `asset_id`: case-insensitive asset ID prefix containing 1 to 64 hexadecimal
+  characters.
+- `domain`: case-insensitive exact domain match. The value must be a valid
+  domain name between 3 and 255 characters.
+- `ticker`: case-insensitive ticker prefix, up to 24 characters.
+- `name`: case-insensitive asset-name prefix, up to 255 characters.
+- `asset_type`: case-insensitive exact match. Supported values are `AMP_asset`,
+  `stablecoin`, `security_token`, and `other`.
+- `category_tag`: case-insensitive category-tag match. Supported values are
+  `stablecoin`, `bond`, `fixed-income`, and `tokenized`. Repeat the parameter
+  to match assets having any supplied tag, for example
+  `category_tag=bond&category_tag=tokenized`.
+- `trading_venue`: case-insensitive exact match. Supported values are
+  `sideswap` and `bitfinex`.
+- `created_after`: return assets created strictly after this RFC 3339
+  timestamp.
+- `updated_after`: return assets updated strictly after this RFC 3339
+  timestamp.
+
+`sort` cannot be combined with `sort_field` or `sort_dir`. Invalid sort or
+filter values return HTTP 400.
+
+Example:
+
+```text
+GET /assets/registry?created_after=2026-01-01T00%3A00%3A00Z&sort=created_at_asc
+```
+
+Search for assets whose names begin with `USD`:
+
+```text
+GET /assets/registry?name=USD
+```
+
+Filters can be combined. Repeated `category_tag` values match assets having
+any of the supplied tags.
 
 Assets are returned in the same format as in `GET /asset/:asset_id`.
 
+The upstream registry's total number of matching results is returned in the
+`X-Total-Results` header. Because entries missing from the local index are
+skipped, this count can be larger than the number of assets electrs returns.
 
-The total number of results will be returned as the `x-total-results` header.
+Responses use `Cache-Control: no-store`. When CORS is enabled,
+`X-Total-Results` is included in `Access-Control-Expose-Headers`.
+
+Registry-dependent list and decimal-supply requests use the following status
+codes for upstream failures:
+
+- `400 Bad Request`: invalid electrs query parameters, or registry validation
+  responses (`400`/`422`).
+- `500 Internal Server Error`: while listing registry assets, a local asset
+  lookup failed.
+- `502 Bad Gateway`: transport errors, malformed or oversized registry
+  responses, rejected redirects, and other unexpected registry statuses.
+- `503 Service Unavailable`: registry `429`/`503` responses or electrs' registry
+  concurrency limit was reached.
+- `504 Gateway Timeout`: the registry request timed out.
 
 ## Transaction format
 

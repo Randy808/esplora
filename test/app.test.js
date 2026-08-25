@@ -55,9 +55,12 @@ const makeBlockRoute = (hash) => {
 };
 
 const makeSources = ({
+  autocomplete$ = empty$,
   blockGridEvent$ = empty$,
   responseStreams = {},
   route = makeRoute(),
+  searchInput$ = empty$,
+  searchKeydown$ = empty$,
   selectedCategories = [],
 } = {}) => ({
   DOM: {
@@ -67,6 +70,10 @@ const makeSources = ({
         selector === ".block-grid__canvas" &&
         eventName === blockGridTransactionSelectEvent
           ? blockGridEvent$
+          : selector === ".search-bar-input" && eventName === "input"
+          ? searchInput$
+          : selector === ".search-bar-input" && eventName === "keydown"
+          ? searchKeydown$
           : empty$,
     }),
   },
@@ -76,6 +83,7 @@ const makeSources = ({
       return responseStreams[category] || empty$;
     },
   },
+  autocomplete: autocomplete$,
   blinding: empty$,
   route,
   scanner: empty$,
@@ -181,6 +189,55 @@ test("navigates a selected pending-block transaction in app history", () => {
       pathname: `/tx/${txid}`,
     },
   ]);
+});
+
+test("navigates the active autocomplete result with Enter", () => {
+  const autocomplete$ = new Subject();
+  const searchInput$ = new Subject();
+  const searchKeydown$ = new Subject();
+  const routeUpdates = [];
+  let prevented = false;
+  const result = {
+    category: "assets",
+    id: `asset:${"a".repeat(64)}`,
+    pathname: `/asset/${"a".repeat(64)}`,
+    asset: { asset_id: "a".repeat(64), name: "Example" },
+  };
+  const sources = makeSources({
+    autocomplete$,
+    searchInput$,
+    searchKeydown$,
+  });
+
+  main(sources).route.subscribe((update) => routeUpdates.push(update));
+  searchInput$.next({ ownerTarget: { value: "Example" } });
+  autocomplete$.next({
+    query: "Example",
+    loading: false,
+    results: [result],
+  });
+  searchKeydown$.next({
+    key: "Enter",
+    preventDefault: () => { prevented = true; },
+  });
+
+  assert.equal(prevented, false);
+  assert.deepEqual(routeUpdates, []);
+
+  searchKeydown$.next({
+    key: "ArrowDown",
+    preventDefault: () => {},
+  });
+  searchKeydown$.next({
+    key: "Enter",
+    preventDefault: () => { prevented = true; },
+  });
+
+  assert.equal(prevented, true);
+  assert.deepEqual(routeUpdates, [{
+    type: "push",
+    pathname: result.pathname,
+  }]);
 });
 
 test("requests predecessor metadata for confirmed block intervals", () => {
