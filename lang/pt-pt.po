@@ -554,9 +554,6 @@ msgstr "TAXA MÉDIA"
 msgid "All selected transactions are shown individually."
 msgstr "Todas as transações selecionadas são apresentadas individualmente."
 
-msgid "Assets vs Liabilities"
-msgstr "Ativos vs Passivos"
-
 msgid "Average"
 msgstr "Média"
 
@@ -598,9 +595,6 @@ msgstr "Utilização do bloco indisponível"
 
 msgid "Blocks History"
 msgstr "Histórico de Blocos"
-
-msgid "Confirmed federation BTC holdings divided by circulating L-BTC supply."
-msgstr "Reservas confirmadas de BTC da federação divididas pela oferta de L-BTC em circulação."
 
 msgid "Confirmed peg-ins minus confirmed peg-outs."
 msgstr "Peg-ins confirmados menos peg-outs confirmados."

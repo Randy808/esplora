@@ -4100,7 +4100,13 @@ a.back-link img{
   min-width: 0;
 }
 
+.proof-of-reserves-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .peg-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--page-gap);
@@ -4126,47 +4132,6 @@ a.back-link img{
 
 .federation-btc-holdings {
   width: 100%;
-}
-
-.assets-vs-liabilities {
-  width: 100%;
-  height: auto;
-}
-
-.assets-vs-liabilities-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 13px;
-  gap: 6px;
-}
-
-.assets-vs-liabilities-scale {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  font-weight: 600;
-  width: 100%;
-}
-
-.assets-vs-liabilities-bar {
-  width: 100%;
-  height: 6px;
-  border-radius: 9999px;
-  background-color: var(--surface-secondary-color);
-}
-
-.assets-vs-liabilities-fill {
-  height: 100%;
-  background-color: var(--accent-color);
-  border-radius: 9999px;
-}
-
-.assets-vs-liabilities-ratio {
-  font-size: 20px;
-  font-weight: 700;
-  font-family: "Rigid Square";
 }
 
 .peg-transaction-table {

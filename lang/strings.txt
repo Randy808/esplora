@@ -12,7 +12,6 @@ Asset commitment
 Asset ID
 Asset name
 Asset: %s
-Assets vs Liabilities
 Average
 Bits
 BLOCK
@@ -42,7 +41,6 @@ EXPECTED INTERVAL REACHED
 compared to bitcoind's suggested fee of %s sat/vB for confirmation within 2 blocks
 Confidential
 Confirmed
-Confirmed federation BTC holdings divided by circulating L-BTC supply.
 Confirmed non-confidential tx count
 Confirmed peg-ins minus confirmed peg-outs.
 Confirmed received
