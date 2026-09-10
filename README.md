@@ -138,7 +138,6 @@ Note that `API_URL` should be set to the publicly-reachable URL where the user's
 Elements-only configuration:
 
 - `IS_ELEMENTS` - set to `1` to indicate this is an Elements-based chain (enables asset issuance and Elements-specific features)
-- `SHOW_PEG_DATA` - set to `1` to show dashboard peg data and fetch its API resources (enabled by the Liquid mainnet and regtest flavors; custom pegged chains must opt in)
 - `SHOW_HIGH_VALUE_ASSETS` - set to `1` to show circulating values for selected assets on the Liquid mainnet dashboard (enabled by the Liquid mainnet flavor)
 - `NATIVE_ASSET_ID` - the ID of the native asset used to pay fees (defaults to `6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a11eec381c526d`, the asset id for BTC)
 - `BLIND_PREFIX` - the base58 address prefix byte used for confidential addresses (defaults to `12`)

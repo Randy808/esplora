@@ -35,7 +35,6 @@ const liquidNativeAssetId = '6f0279e9ed041c3d710a9f57d0c02928416460c4b722ae3457a
 export const nativeAssetId    = process.env.NATIVE_ASSET_ID    || liquidNativeAssetId
 export const nativeAssetLabel = process.env.NATIVE_ASSET_LABEL || 'BTC'
 export const nativeAssetName  = process.env.NATIVE_ASSET_NAME  || 'Bitcoin'
-export const showPegData      = !!process.env.IS_ELEMENTS && process.env.SHOW_PEG_DATA == '1'
 
 export const highValueAssetDefinitions = [
   {
@@ -64,4 +63,3 @@ export const showHighValueAssets = !!process.env.IS_ELEMENTS
 
 // Elements only
 export const assetTxsPerPage = 25
-export const pegTxsPerPage = 25

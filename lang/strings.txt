@@ -4,7 +4,6 @@ A lower-priority fee rate estimated to confirm within %s blocks.
 Address
 Address reuse
 Address: %s
-AMOUNT
 Amount commitment
 API
 Asset
@@ -12,7 +11,6 @@ Asset commitment
 Asset ID
 Asset name
 Asset: %s
-Assets vs Liabilities
 Average
 Bits
 BLOCK
@@ -42,9 +40,7 @@ EXPECTED INTERVAL REACHED
 compared to bitcoind's suggested fee of %s sat/vB for confirmation within 2 blocks
 Confidential
 Confirmed
-Confirmed federation BTC holdings divided by circulating L-BTC supply.
 Confirmed non-confidential tx count
-Confirmed peg-ins minus confirmed peg-outs.
 Confirmed received
 Confirmed spent
 Confirmed tx count
@@ -57,10 +53,8 @@ Description
 Details
 Esplora is currently unavailable, please try again later.
 ETA
-Estimated time until the peg transaction is confirmed.
 Fee
 Fee Market
-Federation BTC Holdings
 Go
 Height
 High
@@ -80,8 +74,6 @@ Issued asset id
 It is possible to tell the change output apart because you're sending to a different script type than the one you're spending from.
 lang_id
 lang_name
-Last change N/A
-Last change on %s
 Likely self-transfer
 Linked domain
 Loading block...
@@ -118,11 +110,6 @@ overpaying by %s%
 P2SH redeem script
 P2WSH witness script
 Page Not Found
-PEG-IN
-PEG-OUT
-Peg Information
-Peg data is currently unavailable.
-Peg-in
 Peg-out
 Peg-out address
 Peg-out ASM
@@ -134,9 +121,7 @@ Previous
 Previous output address
 Previous output script
 Privacy analysis
-Proof of Reserves
 (RBF)
-Recent Peg-Ins/Outs
 Recent transactions
 Re-issuable
 Reissuance
@@ -198,10 +183,8 @@ Transaction not found
 Transactions
 Transaction: %s
 TXID
-TYPE
 txid:vout
 Type
-Unable to refresh — showing previous data.
 unconfirmed
 Unconfirmed
 Unconfirmed received
@@ -218,8 +201,6 @@ Value commitment
 Version
 Version bits recorded in the block header.
 Virtual size
-VOLUME IN
-VOLUME OUT
 We encountered an error. Please try again later.
 Weight
 Weight (KWU)
@@ -227,8 +208,6 @@ Weight units
 Witness
 Yes
 < 1 MINUTE PAST EXPECTED INTERVAL
-< 1 min
-~%s min
 %s SELECTED + COINBASE
 %s added since the last update
 %s days ago

@@ -9,13 +9,11 @@ import { isBitcoinNetwork } from './lib/network'
 import getPrivacyAnalysis from './lib/privacy-analysis'
 import {
   highValueAssetDefinitions,
-  nativeAssetId,
   blockTxsPerPage,
   blocksPerPage,
   difficultyPeriod,
   pollIntervalsMs,
   showHighValueAssets,
-  showPegData,
   blockGridTransactionSelectEvent
 } from './const'
 import {
@@ -243,14 +241,6 @@ export default function main(
       hasFocus,
       pollingEnabled
     )
-  , recoverableReply = cat => O.merge(
-        reply(cat).map(value => ({ value, succeeded: true }))
-      , extractErrors(HTTP.select(cat)).mapTo({ succeeded: false }))
-      .scan((state, result) => result.succeeded
-          ? { value: result.value, error: false }
-          : { ...state, error: true }
-        , { value: null, error: false })
-      .startWith({ value: null, error: false })
   , on    = (sel, ev, opt={}) => DOM.select(sel).events(ev, opt)
   , click = sel => on(sel, 'click').map(e => e.ownerTarget.dataset)
 
@@ -449,26 +439,6 @@ export default function main(
       })
 
   // dashboard
-  , dashboardPegAsset$ = !showPegData
-      ? O.of({ value: null, error: false })
-      : recoverableReply('dashboard-peg-asset')
-  , dashboardPegChainTxs$ = !showPegData
-      ? O.of({ value: null, error: false })
-      : recoverableReply('dashboard-peg-chain-txs')
-  , dashboardPegMempoolTxs$ = !showPegData
-      ? O.of({ value: null, error: false })
-      : recoverableReply('dashboard-peg-mempool-txs')
-  , dashboardPegState$ = O.combineLatest(
-      dashboardPegAsset$
-    , dashboardPegChainTxs$
-    , dashboardPegMempoolTxs$
-    , (asset, chainTxs, mempoolTxs) => ({
-        asset: asset.value
-      , txs: chainTxs.value != null && mempoolTxs.value != null
-          ? [ ...mempoolTxs.value, ...chainTxs.value ]
-          : null
-      , error: asset.error || chainTxs.error || mempoolTxs.error
-      }))
   , dashboardHighValueAssets$ = !showHighValueAssets
       ? O.of({})
       : O.merge(...highValueAssetDefinitions.reduce((replies, asset) => [
@@ -495,12 +465,10 @@ export default function main(
   , dashboardState$ = O.combineLatest(
       blocks$,
       mempoolRecent$,
-      dashboardPegState$,
       dashboardHighValueAssets$,
-      (blks, txs, peg, highValueAssets) => ({
+      (blks, txs, highValueAssets) => ({
         dashblocks: blks.slice(0, 5),
         dashTxs: txs.slice(0, 11),
-        peg,
         highValueAssets
       }))
 
@@ -757,20 +725,9 @@ export default function main(
       )
        .mapTo(                 { category: 'recent',     method: 'GET', path: '/mempool/recent', bg: true })
 
-    // refresh pending peg transactions on the standard cadence
-    , !showPegData ? O.empty() :
-        pollViewing(pollIntervalsMs.standard, 'dashBoard', view$)
-          .mapTo({ category: 'dashboard-peg-mempool-txs', method: 'GET', path: `/asset/${nativeAssetId}/txs/mempool`, bg: true })
-
     // the market chart contains hourly samples and uses the slow cadence
     , pollViewing(pollIntervalsMs.slow, 'dashBoard', view$)
         .mapTo({ category: 'bitcoin-market-chart', method: 'GET', path: bitcoinMarketChartUrl, bg: true })
-
-    // confirmed peg state changes only when a new block arrives
-    , !showPegData ? O.empty() :
-        dashboardNewBlock$.flatMap(_ =>
-                              [{ category: 'dashboard-peg-asset', method: 'GET', path: `/asset/${nativeAssetId}`, bg: true }
-                              , { category: 'dashboard-peg-chain-txs', method: 'GET', path: `/asset/${nativeAssetId}/txs/chain`, bg: true }])
 
     // Refresh the pending block template while the dashboard remains open. A new
     // tip resets the cadence and waits for electrs' block cache to refresh.
@@ -782,12 +739,6 @@ export default function main(
                               , { category: 'fee-est',    method: 'GET', path: '/fee-estimates' }
                               , { category: 'mempool',    method: 'GET', path: '/mempool' }
                               , { category: 'bitcoin-market-chart', method: 'GET', path: bitcoinMarketChartUrl, bg: true }])
-
-    // fetch peg data only when opening an Elements dashboard
-    , !showPegData ? O.empty() :
-        goHome$.flatMap(_ =>  [{ category: 'dashboard-peg-asset', method: 'GET', path: `/asset/${nativeAssetId}`, bg: true }
-                              , { category: 'dashboard-peg-chain-txs', method: 'GET', path: `/asset/${nativeAssetId}/txs/chain`, bg: true }
-                              , { category: 'dashboard-peg-mempool-txs', method: 'GET', path: `/asset/${nativeAssetId}/txs/mempool`, bg: true }])
 
     // fetch asset stats and USD prices only while viewing the Liquid dashboard
     , !showHighValueAssets ? O.empty() :

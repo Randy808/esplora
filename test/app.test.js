@@ -7,7 +7,6 @@ const {
 
 process.env.IS_ELEMENTS = "1";
 process.env.MENU_ACTIVE = "Liquid";
-process.env.SHOW_PEG_DATA = "1";
 process.env.SHOW_HIGH_VALUE_ASSETS = "1";
 process.env.CANONICAL_URL = "https://blockstream.info/liquid/";
 
@@ -328,10 +327,6 @@ test("uses the configured dashboard request cadences without immediate duplicate
   assert.deepEqual(requestFrames(requests, "recent"), fastFrames);
   assert.deepEqual(requestFrames(requests, "mempool"), standardFrames);
   assert.deepEqual(requestFrames(requests, "fee-est"), standardFrames);
-  assert.deepEqual(
-    requestFrames(requests, "dashboard-peg-mempool-txs"),
-    standardFrames,
-  );
   assert.deepEqual(requestFrames(requests, "blocks"), slowFrames);
   assert.deepEqual(
     requestFrames(requests, "bitcoin-market-chart"),
@@ -462,7 +457,7 @@ test("treats the first block response of each dashboard visit as a baseline", ()
   assert.deepEqual(newBlocks, ["b", "e"]);
 });
 
-test("refreshes Liquid block-dependent data only after a new block response", () => {
+test("resets block-template polling only after a new block response", () => {
   const scheduler = new TestScheduler((actual, expected) =>
     assert.deepEqual(actual, expected));
   const blocksResponses = new Subject();
@@ -489,15 +484,6 @@ test("refreshes Liquid block-dependent data only after a new block response", ()
   scheduler.flush();
 
   assert.deepEqual(requestFrames(requests, "blocks"), [0, 3]);
-  assert.deepEqual(requestFrames(requests, "dashboard-peg-asset"), [0, 4]);
-  assert.deepEqual(
-    requestFrames(requests, "dashboard-peg-chain-txs"),
-    [0, 4],
-  );
-  assert.deepEqual(
-    requestFrames(requests, "dashboard-peg-mempool-txs"),
-    [0],
-  );
   assert.deepEqual(requestFrames(requests, "block-template"), [0, 15_004]);
 });
 

@@ -97,7 +97,6 @@ test("localizes elapsed times and formatter-owned fallbacks", () => {
 
 test("preserves all-caps dashboard label casing in Portuguese", () => {
   [
-    "AMOUNT",
     "AVERAGE BLOCK TIME",
     "AVG FEE",
     "%s AGO",
@@ -118,8 +117,6 @@ test("preserves all-caps dashboard label casing in Portuguese", () => {
     "MINUTES",
     "MONTH",
     "MONTHS",
-    "PEG-IN",
-    "PEG-OUT",
     "PREVIOUS ADJ",
     "SIZE",
     "TOTAL FEE COLLECTED",
@@ -127,10 +124,7 @@ test("preserves all-caps dashboard label casing in Portuguese", () => {
     "TRANSACTIONS",
     "TX ID",
     "TXID",
-    "TYPE",
     "VALUE",
-    "VOLUME IN",
-    "VOLUME OUT",
     "YEAR",
     "YEARS",
   ].forEach((key) => {

@@ -527,9 +527,6 @@ msgstr "há 1 minuto"
 msgid "< 1 MINUTE PAST EXPECTED INTERVAL"
 msgstr "< 1 MINUTO APÓS O INTERVALO PREVISTO"
 
-msgid "< 1 min"
-msgstr "< 1 min"
-
 msgid "< 1m"
 msgstr "< 1min"
 
@@ -542,9 +539,6 @@ msgstr "Uma taxa de comissão de prioridade mais alta estimada para confirmaçã
 msgid "A lower-priority fee rate estimated to confirm within %s blocks."
 msgstr "Uma taxa de comissão de prioridade mais baixa estimada para confirmação no prazo de %0 blocos."
 
-msgid "AMOUNT"
-msgstr "MONTANTE"
-
 msgid "AVERAGE BLOCK TIME"
 msgstr "TEMPO MÉDIO DO BLOCO"
 
@@ -553,9 +547,6 @@ msgstr "TAXA MÉDIA"
 
 msgid "All selected transactions are shown individually."
 msgstr "Todas as transações selecionadas são apresentadas individualmente."
-
-msgid "Assets vs Liabilities"
-msgstr "Ativos vs Passivos"
 
 msgid "Average"
 msgstr "Média"
@@ -598,12 +589,6 @@ msgstr "Utilização do bloco indisponível"
 
 msgid "Blocks History"
 msgstr "Histórico de Blocos"
-
-msgid "Confirmed federation BTC holdings divided by circulating L-BTC supply."
-msgstr "Reservas confirmadas de BTC da federação divididas pela oferta de L-BTC em circulação."
-
-msgid "Confirmed peg-ins minus confirmed peg-outs."
-msgstr "Peg-ins confirmados menos peg-outs confirmados."
 
 msgid "Copy block number %s"
 msgstr "Copiar número do bloco %0"
@@ -650,17 +635,11 @@ msgstr "Tempo decorrido desde a confirmação do último bloco. A rede Liquid pr
 msgid "Estimated computing power securing the network."
 msgstr "Poder computacional estimado que protege a rede."
 
-msgid "Estimated time until the peg transaction is confirmed."
-msgstr "Tempo estimado até à confirmação da transação de peg."
-
 msgid "Exahashes per second"
 msgstr "Exahashes por segundo"
 
 msgid "FEE"
 msgstr "TAXA"
-
-msgid "Federation BTC Holdings"
-msgstr "Reservas de BTC da Federação"
 
 msgid "Fee Market"
 msgstr "Mercado de Taxas"
@@ -712,12 +691,6 @@ msgstr "Kilohashes por segundo"
 
 msgid "LOW"
 msgstr "BAIXA"
-
-msgid "Last change N/A"
-msgstr "Última alteração N/D"
-
-msgid "Last change on %s"
-msgstr "Última alteração em %0"
 
 msgid "Latest"
 msgstr "Mais Recente"
@@ -776,23 +749,8 @@ msgstr "Sem blocos recentes"
 msgid "Overview"
 msgstr "Visão Geral"
 
-msgid "PEG-IN"
-msgstr "PEG-IN"
-
-msgid "PEG-OUT"
-msgstr "PEG-OUT"
-
 msgid "PREVIOUS ADJ"
 msgstr "AJUSTE ANTERIOR"
-
-msgid "Peg Information"
-msgstr "Informação de Peg"
-
-msgid "Peg data is currently unavailable."
-msgstr "Os dados de peg estão atualmente indisponíveis."
-
-msgid "Peg-in"
-msgstr "Peg-in"
 
 msgid "Pending Transactions"
 msgstr "Transações Pendentes"
@@ -802,12 +760,6 @@ msgstr "Grelha de transações do bloco pendente"
 
 msgid "Petahashes per second"
 msgstr "Petahashes por segundo"
-
-msgid "Proof of Reserves"
-msgstr "Prova de Reservas"
-
-msgid "Recent Peg-Ins/Outs"
-msgstr "Peg-Ins/Outs Recentes"
 
 msgid "Recommended Fee"
 msgstr "Taxa Recomendada"
@@ -839,9 +791,6 @@ msgstr "TRANSAÇÕES"
 msgid "TX ID"
 msgstr "ID DA TX"
 
-msgid "TYPE"
-msgstr "TIPO"
-
 msgid "Terahashes per second"
 msgstr "Terahashes por segundo"
 
@@ -866,9 +815,6 @@ msgstr "Transações atualmente selecionadas para o bloco pendente, incluindo a 
 msgid "Transactions currently waiting in the node's mempool."
 msgstr "Transações atualmente à espera na mempool do nó."
 
-msgid "Unable to refresh — showing previous data."
-msgstr "Não foi possível atualizar — a apresentar os dados anteriores."
-
 msgid "Unknown"
 msgstr "Desconhecido"
 
@@ -877,12 +823,6 @@ msgstr "Utilize as teclas de seta para inspecionar transações e Enter para abr
 
 msgid "VALUE"
 msgstr "VALOR"
-
-msgid "VOLUME IN"
-msgstr "VOLUME DE ENTRADA"
-
-msgid "VOLUME OUT"
-msgstr "VOLUME DE SAÍDA"
 
 msgid "View block %s"
 msgstr "Ver bloco %0"
@@ -925,9 +865,6 @@ msgstr "sem"
 
 msgid "y"
 msgstr "a"
-
-msgid "~%s min"
-msgstr "~%0 min"
 
 msgid "%s AGO"
 msgstr "HÁ %0"
