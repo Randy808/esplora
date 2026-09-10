@@ -15,10 +15,6 @@ import {
 } from "../const";
 
 const staticRoot = process.env.STATIC_ROOT || "";
-const ratioMiddleBound = 100;
-const minimumRatioHalfRange = 0.1;
-const ratioScaleIncrement = 0.1;
-const ratioScaleHeadroom = 0.05;
 const recentPegTransactionLimit = 4;
 
 const getPegTypes = (tx) => {
@@ -67,30 +63,6 @@ const getPegAmount = (tx, pegType) => {
     ? getPegInAmount(tx)
     : sumValues(outputs.filter((output) => output.pegout));
 };
-
-const getRatioScale = (ratio) => {
-  const ratioDistance = Number.isFinite(ratio)
-    ? Math.abs(ratio - ratioMiddleBound)
-    : 0;
-  const halfRange = Math.max(
-    minimumRatioHalfRange,
-    Math.ceil(
-      (ratioDistance + ratioScaleHeadroom) / ratioScaleIncrement,
-    ) * ratioScaleIncrement,
-  );
-  const lowerBound = ratioMiddleBound - halfRange;
-  const upperBound = ratioMiddleBound + halfRange;
-  const fill = Number.isFinite(ratio)
-    ? Math.min(
-        100,
-        Math.max(0, ((ratio - lowerBound) / (upperBound - lowerBound)) * 100),
-      )
-    : 0;
-
-  return { lowerBound, upperBound, fill };
-};
-
-const formatRatioBound = (ratio) => `${ratio.toFixed(1)}%`;
 
 const getLastConfirmationTime = (txs) =>
   txs.reduce(
@@ -155,9 +127,7 @@ export const pegInfo = (asset, txs, { t, feeEst, error }) => {
     pegInAmount,
     pegOutAmount,
     federationAssets,
-    assetsVsLiabilitiesRatio,
   } = getPegAccounting(chainStats);
-  const ratioScale = getRatioScale(assetsVsLiabilitiesRatio);
   const allPegTransactions = txs
     .reduce(
       (entries, tx) => entries.concat(
@@ -179,7 +149,7 @@ export const pegInfo = (asset, txs, { t, feeEst, error }) => {
   );
 
   return (
-    <div>
+    <div className="proof-of-reserves-container">
       <p className="section-title">{t`Proof of Reserves`}</p>
       <div className="peg-info">
         {error ? (
@@ -196,32 +166,6 @@ export const pegInfo = (asset, txs, { t, feeEst, error }) => {
             lastConfirmationTime
               ? t`Last change on ${formatTime(lastConfirmationTime, false)}`
               : t`Last change N/A`
-          }
-        />
-
-        <InfoCard
-          title={t`Assets vs Liabilities`}
-          className="assets-vs-liabilities"
-          tooltip={t`Confirmed federation BTC holdings divided by circulating L-BTC supply.`}
-          body={
-            <div className="assets-vs-liabilities-body">
-              <div className="assets-vs-liabilities-scale">
-                <p>{formatRatioBound(ratioScale.lowerBound)}</p>
-                <p>{formatRatioBound(ratioMiddleBound)}</p>
-                <p>{formatRatioBound(ratioScale.upperBound)}</p>
-              </div>
-              <div className="assets-vs-liabilities-bar">
-                <div
-                  className="assets-vs-liabilities-fill"
-                  style={{ width: `${ratioScale.fill}%` }}
-                ></div>
-              </div>
-              <p className="assets-vs-liabilities-ratio">
-                {Number.isFinite(assetsVsLiabilitiesRatio)
-                  ? `${assetsVsLiabilitiesRatio.toFixed(3)}%`
-                  : t`N/A`}
-              </p>
-            </div>
           }
         />
 
