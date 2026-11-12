@@ -26,7 +26,7 @@ import {
   formatWeight,
 } from "../lib/pending-block-details";
 import { getLatestBitcoinPrice } from "../lib/market";
-import { formatFeeRate, formatSat, formatUsd, formatVMB } from "./util";
+import { formatFeeRate, formatSat, formatSatWithUsd, formatUsd, formatVMB } from "./util";
 
 // Fee estimates are inclusive upper bounds, while the grid expects inclusive
 // lower thresholds. Move just beyond a boundary so an equal rate stays in the
@@ -438,7 +438,7 @@ const PendingBlockDetailsCard = ({
             {blockStat(
               t`TOTAL FEE COLLECTED`,
               metrics && Number.isFinite(metrics.totalFees)
-                ? formatSat(metrics.totalFees)
+                ? formatSatWithUsd(metrics.totalFees, { bitcoinPrice, t })
                 : templateFallback,
             )}
           </div>

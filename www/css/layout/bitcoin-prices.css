@@ -1,0 +1,91 @@
+.bitcoin-prices .overview-fees {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.bitcoin-prices .transaction-fees-content {
+  flex: 1 1 0;
+  min-width: min-content;
+  max-width: 100%;
+  justify-content: flex-end;
+}
+
+.bitcoin-prices .transaction-fees-content > div,
+.bitcoin-prices .transaction-fee-value {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.bitcoin-prices .transaction-fee-value .amount-with-usd {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 4px 8px;
+}
+
+.bitcoin-prices .tx-page .detail-field,
+.bitcoin-prices .addr-page .detail-field {
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.bitcoin-prices .info-stats-row {
+  flex-wrap: wrap;
+}
+
+.address-output-summary {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 6px;
+}
+
+.address-output-count {
+  white-space: nowrap;
+}
+
+.address-output-summary-stacked > .amount-with-usd {
+  width: 100%;
+  text-align: right;
+}
+
+.address-output-primary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px 6px;
+}
+
+.address-output-primary > span {
+  white-space: nowrap;
+}
+
+.bitcoin-prices .addr-page .detail-field-content .address-output-summary {
+  justify-content: flex-end;
+}
+
+@media (max-width: 1328px) {
+  .bitcoin-prices .mempool-page .stats-table > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    height: auto;
+    min-height: 52px;
+    padding: 8px 0;
+  }
+
+  .bitcoin-prices .mempool-page .stats-table > div > div:last-child {
+    margin-inline-start: auto;
+  }
+
+  .bitcoin-prices .transaction-table-footer .amount {
+    font-size: 14px;
+  }
+
+}

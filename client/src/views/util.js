@@ -1,8 +1,10 @@
 import moveDec from 'move-decimal-point'
 import { sat2btc } from 'fmtbtc'
-import { maxBlockWeight, nativeAssetLabel } from '../const'
+import { maxBlockWeight, nativeAssetLabel, satoshisPerBitcoin } from '../const'
 import { isNativeOut } from '../util'
 import { ConfidentialBadge } from '../components/status-badge'
+import { AmountWithUsd } from '../components/amount-with-usd'
+import { isBitcoinOrLiquidMainnet } from '../lib/network'
 
 const DEFAULT_ISSUED_PRECISION = 0
     , NATIVE_PRECISION = 8
@@ -38,20 +40,32 @@ export const formatUsd = (value, fallback='N/A') =>
       })} USD`
     : fallback
 
+export const formatSatWithUsd = (sats, { bitcoinPrice, t, unavailable } = {}, primary = formatSat(sats)) => {
+  if (!isBitcoinOrLiquidMainnet) return primary
+
+  const satoshis = typeof sats == 'bigint' ? Number(sats) : sats
+      , usd = Number.isFinite(satoshis) && Number.isFinite(bitcoinPrice) && bitcoinPrice >= 0
+    ? (satoshis / satoshisPerBitcoin) * bitcoinPrice
+    : null
+
+  return <AmountWithUsd primary={primary} secondary={formatUsd(usd, unavailable ?? (t ? t`N/A` : 'N/A'))} />
+}
+
 export const formatAssetAmount = (value, precision=0, t) =>
   <span>
     {formatNumber(precision > 0 ? moveDec(value, -precision) : value, precision)}
   </span>
 
-export const formatOutAmount = (vout, { t, assetMap }, shortDisplay=false) => {
+export const formatOutAmount = (vout, { t, assetMap, bitcoinPrice }, shortDisplay=false) => {
   if (vout.value == null) return <ConfidentialBadge t={t} />
 
   if (isNativeOut(vout)) {
-    return <span>
+    const primary = <span>
       {formatNumber(sat2btc(vout.value), NATIVE_PRECISION)}
       { ' ' }
       {!vout.asset ? nativeAssetLabel : <a href={`asset/${vout.asset}`}>{nativeAssetLabel}</a>}
     </span>
+    return formatSatWithUsd(vout.value, { t, bitcoinPrice }, primary)
   }
 
   const [ domain, ticker, name, _precision ] = vout.asset && assetMap && assetMap[vout.asset] || []

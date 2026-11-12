@@ -4,7 +4,7 @@ import vinView from "./tx-vin";
 import voutView from "./tx-vout";
 import privacyAnalysisView from "./tx-privacy-analysis";
 import segwitGainsView from "./tx-segwit-gains";
-import { formatSat, formatTime, formatVMB, formatNumber } from "./util";
+import { formatSat, formatSatWithUsd, formatTime, formatVMB, formatNumber } from "./util";
 import {
   isAllUnconfidential,
   isAllNative,
@@ -234,6 +234,7 @@ const txHeader = (
     block,
     tipHeight,
     feeEst,
+    bitcoinPrice,
     t,
     txAnalysis: {
       feerate,
@@ -343,12 +344,12 @@ const txHeader = (
 
               <div className="detail-field">
                 <p className="detail-field-label">TRANSACTION FEES</p>
-                <div className="detail-field-content">
+                <div className="detail-field-content transaction-fees-content">
                   {feerate != null ? (
                     <div>
                       <div className="overview-fees">
                         <p className="transaction-fee-value">
-                          {formatSat(tx.fee)}
+                          {formatSatWithUsd(tx.fee, { bitcoinPrice, t })}
                         </p>
                         <p className="transaction-fee-rate">
                           {`(${feerate.toFixed(2)} sat/vB)`}
