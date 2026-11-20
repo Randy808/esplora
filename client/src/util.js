@@ -141,6 +141,20 @@ export const tickWhileFocused = (
     ? O.timer(0, ms, scheduler).filter(hasFocus)
     : O.empty()
 
+// Emits once after the browser has painted the current DOM: a timeout queued from an
+// animation frame callback runs after that frame is painted.
+export const afterNextPaint = () => O.create(observer => {
+  let timeout
+  const frame = requestAnimationFrame(() => timeout = setTimeout(() => {
+    observer.next()
+    observer.complete()
+  }))
+  return () => {
+    cancelAnimationFrame(frame)
+    clearTimeout(timeout)
+  }
+})
+
 export const schedulePollsWhileActive = (ms, activeKey$, scheduler) =>
   activeKey$
     .distinctUntilChanged()

@@ -32,6 +32,7 @@ import {
     isHash256,
     makeAddressQR,
     tickWhileFocused,
+    afterNextPaint,
     pollWhileActive,
     pollWhileViewing,
     updateBlocks,
@@ -957,8 +958,19 @@ export default function main(
     , moreSTxs$.map(d       => ({ category: 'asset-txs-more', method: 'GET', path: `/asset/${d.asset_id}/txs/chain/${d.last_txid}` }))
     ).map(setBase)
 
+  // Rendering a full page can take a few hundred milliseconds on slow phones. Paint the
+  // clicked tab over a loading body first, so the tap gets immediate feedback.
+  , navShellTab$ = on('.sub-nav a', 'click')
+      .filter(e => e.button == 0 && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey))
+      .map(e => e.ownerTarget.dataset.navTab)
+      .filter(Boolean)
+      .switchMap(tab => O.of(tab).concat(afterNextPaint().mapTo(null)))
+      .startWith(null)
+
   // DOM sink
-  , vdom$ = state$.map(S => S.view && views[S.view](S) || null)
+  , vdom$ = state$.combineLatest(navShellTab$, (S, navTab) =>
+      navTab ? views.loading({ ...S, activeTab: navTab })
+             : S.view && views[S.view](S) || null)
 
   // localStorage sink
   , store$ = O.merge(

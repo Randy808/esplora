@@ -952,12 +952,6 @@ table th {
   width: 168px;
 }
 
-.address-table {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
 /* START FOOTER */
 .explorer-container > .footer {
   width: 100%;
@@ -4064,23 +4058,6 @@ a.back-link img{
   margin-left: 16px;
 }
 
-.pending-block-details-card-header {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  min-height: 20px;
-}
-
-.pending-block-timestamp {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  color: var(--foreground-muted);
-  font-size: 14px;
-  font-weight: 400;
-}
-
 .pending-block-stats {
   display: flex;
   flex-wrap: wrap;
@@ -4555,10 +4532,6 @@ a.back-link img{
     margin-left: 0;
   }
 
-  .pending-block-details-card-header {
-    flex-wrap: wrap;
-  }
-
   .pending-block-details-button {
     font-size: 14px;
   }
@@ -4699,10 +4672,6 @@ a.back-link img{
   .toggle-menu .section1 .wallets-link .store-icons{
     width: 100%;
     margin-top: 30px;
-  }
-
-  .navbar-brand{
-    margin-right: 0;
   }
 
   .main-nav li{

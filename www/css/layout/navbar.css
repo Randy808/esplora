@@ -1,0 +1,15 @@
+.navbar-brand img {
+  display: block;
+  width: 186px;
+  height: auto;
+}
+
+@media only screen and (max-width: 1328px) {
+  .navbar-brand {
+    margin-right: 0;
+  }
+
+  .navbar-brand img {
+    width: 156px;
+  }
+}
